@@ -1,3 +1,6 @@
+using BuildingBlocks;
+using BuildingBlocks.Middleware;
+using Grpc.AspNetCore.Server;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +16,7 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        
+        services.AddGrpc(option => option.Interceptors.Add<Exceptioninterceptor>());
         services.AddDbContext<PostDbContext>(op =>
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api")));

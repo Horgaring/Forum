@@ -1,5 +1,7 @@
 using Infrastructure;
 using System.Text.Json.Serialization;
+using Api.Services;
+using Application;
 using BuildingBlocks.Middleware;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,7 @@ builder.Host.UseSerilog((cbx,lc) =>lc
     .WriteTo.Console()
     );
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions
                 .ReferenceHandler = ReferenceHandler.Preserve); 
 var app = builder.Build();
@@ -26,11 +29,10 @@ if (app.Environment.IsDevelopment())
         op.SwaggerEndpoint("/swagger","v1"));
     
 }
-
-app.UseMiddleware<ExceptionMiddleware>();
+    
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers(); 
+app.MapGrpcService<PostService>();
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 app.Run();

@@ -1,5 +1,7 @@
-using Application.DTOs.Post;
+
+using BuildingBlocks;
 using Dapper;
+using GrpcService1;
 using Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +43,7 @@ public class GetPostHandler : IRequestHandler<GetPostRequest,List<PostResponseDT
                 PageSize = request.PageSize
             });
         
-        return Task.FromResult<List<PostResponseDTO>>(result: res.ToList());
+        return Task.FromResult<List<PostResponseDTO>>(result: res?.ToList() ?? Enumerable.Empty<PostResponseDTO>().ToList());
 
     }
 }

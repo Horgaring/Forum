@@ -1,6 +1,6 @@
 using System.Net;
-using Application.DTOs.Post;
 using Application.Exceptions;
+using Grpc.Core;
 using Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +29,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
                                                  && op.Date == request.Date);
        if (post is null)
        {
-           throw new PostNotFountException(HttpStatusCode.NotFound,null);
+           throw new PostNotFountException(StatusCode.NotFound,null);
        }
 
        post.Update(request.Title,request.Description);

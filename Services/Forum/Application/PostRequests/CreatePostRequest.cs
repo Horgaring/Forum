@@ -5,7 +5,7 @@ using Infrastructure.Context;
 
 namespace Application.PostRequests;
 
-public class CreatePostRequest : IRequest
+public class CreatePostRequest : IRequest<bool>
 {
     
     public string Userid { get; set; }
@@ -13,7 +13,7 @@ public class CreatePostRequest : IRequest
     public string? Description { get; set; }
     public DateTime Date { get; set; }
 }
-public class CreatePostHandler : IRequestHandler<CreatePostRequest>
+public class CreatePostHandler : IRequestHandler<CreatePostRequest,bool>
 {
     private readonly PostDbContext _db;
 
@@ -21,7 +21,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest>
         (_db) = (db);
 
 
-    public async Task Handle(CreatePostRequest request, CancellationToken cancellationToken)
+    public async Task<bool> Handle(CreatePostRequest request, CancellationToken cancellationToken)
     {
         
         var postentity = new Post()
@@ -32,8 +32,11 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest>
             Date = request.Date
         };
         _db.Post.Add(postentity);
-        await _db.SaveChangesAsync();
         
-
+        if (await _db.SaveChangesAsync() > 0)
+        {
+            return true;
+        }
+        return false;
     }
 }

@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.0.151" />
+      <PackageReference Include="Grpc.AspNetCore" Version="2.56.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
@@ -36,9 +37,14 @@
 
 
     <ItemGroup>
+      <Reference Include="AutoMapper">
+        <HintPath>..\..\..\..\..\.nuget\packages\automapper\12.0.1\lib\netstandard2.1\AutoMapper.dll</HintPath>
+      </Reference>
       <Reference Include="IdentityModel">
         <HintPath>..\..\..\..\..\.nuget\packages\identitymodel\6.1.0\lib\net6.0\IdentityModel.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+
 
 </Project>

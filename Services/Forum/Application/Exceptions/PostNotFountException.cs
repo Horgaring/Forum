@@ -1,11 +1,12 @@
 using System.Net;
 using BuildingBlocks.Exception;
+using Grpc.Core;
 
 namespace Application.Exceptions;
 
-public class PostNotFountException : CustomExceptions
+public class PostNotFountException : CustomException
 {
-    public PostNotFountException( HttpStatusCode statusCode, string[]? messageDetails) : base("Post Not Fount", statusCode, messageDetails)
+    public PostNotFountException( StatusCode statusCode, string[]? messageDetails) : base(statusCode, messageDetails, "Post Not Fount")
     {
     }
 }

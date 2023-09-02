@@ -27,9 +27,6 @@
 
 
 
-    <ItemGroup>
-      <Folder Include="CommentRequests\" />
-    </ItemGroup>
 
 
     

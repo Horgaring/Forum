@@ -9,7 +9,6 @@ public class PostDbContext: DbContext
     {
     }
     public DbSet<Post>? Post { get; set; }
-    public DbSet<Comment>? Comment { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
