@@ -1,5 +1,6 @@
 using BuildingBlocks.Middleware;
 using Duende.IdentityServer;
+using Duende.IdentityServer.Test;
 using Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -51,10 +52,12 @@ internal static class HostingExtensions
                 // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 options.EmitStaticAudienceClaim = true;
             })
+
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddAspNetIdentity<User>();
+        
             
 
         builder.Services.AddAuthentication()

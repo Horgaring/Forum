@@ -2,7 +2,7 @@ using System.Data;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace Infrastructure;
+namespace BuildingBlocks;
 
 public class  SqlConnectionFactory: ISqlconnectionfactory
 {

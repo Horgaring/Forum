@@ -1,11 +1,12 @@
 using System.Net;
 using BuildingBlocks.Exception;
+using Grpc.Core;
 
 namespace Application.Exception;
 
-public class CommentNotFound: CustomExceptions
+public class CommentNotFound: CustomException
 {
-    public CommentNotFound(HttpStatusCode statusCode, string[]? messages) : base("Comment not found", statusCode, messages)
+    public CommentNotFound(StatusCode statusCode, string[]? messages) : base(statusCode,messages, "Comment not found")
     {
     }
 }

@@ -5,26 +5,26 @@ using MediatR;
 using GrpcService1;
 namespace Application.Requests;
 
-public class GetCommentRequest : IRequest<List<CommentsResponseDTO>>
+public class GetCommentRequest : IRequest<List<CommentsResponse>>
 {
     public string PostId { get; set; }
     public int ListSize{ get; set; }
     public int ListNum { get; set; }
 }
 
-public class GetCommentHandler : IRequestHandler<GetCommentRequest,List<GrpcService1.CommentsResponseDTO>>
+public class GetCommentHandler : IRequestHandler<GetCommentRequest,List<GrpcService1.CommentsResponse>>
 {
     private readonly ISqlconnectionfactory _Connectionfactory;
 
     public GetCommentHandler(ISqlconnectionfactory conf)=>
         (_Connectionfactory) = (conf);
     
-    public Task<List<GrpcService1.CommentsResponseDTO>> Handle(GetCommentRequest request, CancellationToken cancellationToken)
+    public Task<List<GrpcService1.CommentsResponse>> Handle(GetCommentRequest request, CancellationToken cancellationToken)
     {
         using var con = _Connectionfactory.Create();
         
         con.Open();
-        var comments = con.Query<GrpcService1.CommentsResponseDTO>(
+        var comments = con.Query<GrpcService1.CommentsResponse>(
             sql: """
                  SELECT
                      Postid,
@@ -40,7 +40,7 @@ public class GetCommentHandler : IRequestHandler<GetCommentRequest,List<GrpcServ
                 PageSize = request.ListSize
             });
         
-        return Task.FromResult<List<GrpcService1.CommentsResponseDTO>>(result: comments?.ToList() ?? Enumerable.Empty<GrpcService1.CommentsResponseDTO>().ToList());
+        return Task.FromResult<List<GrpcService1.CommentsResponse>>(result: comments?.ToList() ?? Enumerable.Empty<GrpcService1.CommentsResponse>().ToList());
 
     }
 }

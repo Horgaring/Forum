@@ -1,5 +1,6 @@
 using System.Net;
 using Application.Exception;
+using Grpc.Core;
 using Infrastructure.Context;
 using MediatR;
 
@@ -27,7 +28,7 @@ public class UpdateCommentHandler : IRequestHandler<UpdateCommentRequest>
         var comment = _db.Comment.SingleOrDefault(comment => comment.Id == request.id);
         if (comment == null)
         {
-            throw new CommentNotFound(HttpStatusCode.BadRequest,null);
+            throw new CommentNotFound(StatusCode.NotFound,null);
         }
         comment.Update(request.Content);
         _db.Comment.Update(comment);

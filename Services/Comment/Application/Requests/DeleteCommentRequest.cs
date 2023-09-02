@@ -1,6 +1,7 @@
 using System.Net;
 using Application.Exception;
 using Domain;
+using Grpc.Core;
 using Infrastructure.Context;
 using MediatR;
 
@@ -23,7 +24,7 @@ public class DeleteCommentHandler : IRequestHandler<DeleteCommentRequest>
         var comment = _db.Comment.SingleOrDefault(comment => comment.Id == request.id);
         if (comment == null)
         {
-            throw new CommentNotFound(HttpStatusCode.BadRequest,null);
+            throw new CommentNotFound(StatusCode.NotFound,null);
         }
         _db.Comment.Remove(comment);
         await _db.SaveChangesAsync(cancellationToken);

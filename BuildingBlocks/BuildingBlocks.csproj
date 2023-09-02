@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.7.1" />
+      <PackageReference Include="Grpc.Core.Api" Version="2.56.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
     </ItemGroup>
 
@@ -15,12 +16,19 @@
       <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
         <HintPath>..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+        <HintPath>..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
         <HintPath>..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Npgsql">
+        <HintPath>..\..\..\.nuget\packages\npgsql\7.0.4\lib\net7.0\Npgsql.dll</HintPath>
       </Reference>
       <Reference Include="Serilog">
         <HintPath>..\..\..\.nuget\packages\serilog\3.0.2-dev-02044\lib\net7.0\Serilog.dll</HintPath>
       </Reference>
     </ItemGroup>
+
 
 </Project>
