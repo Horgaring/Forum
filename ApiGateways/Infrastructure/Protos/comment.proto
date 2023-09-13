@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcClientcomment";
+
+import "google/protobuf/timestamp.proto";
+
+package comment;
+
+
+service Comment {
+
+  rpc CreateComment (CommentRequestDTO) returns (CommentResponseDTO);
+  rpc DeleteComment (DeleteCommentRequestDTO) returns (StatusResponse);
+  rpc UpdateComment (CommentRequestDTO) returns (StatusResponse);
+  rpc GetComments (GetCommentRequest) returns (CommentsResponse);
+}
+
+
+message CommentRequestDTO {
+    int32 id = 1;
+    string Content = 2;
+}
+message DeleteCommentRequestDTO {
+    int32 id = 1;
+}
+message GetCommentRequest {
+    string Postid = 1;
+    int32 listsize = 2;
+    int32 listnum = 3;
+}
+message CommentsResponse {
+    repeated CommentResponseDTO response_dtos = 1;
+}
+message CommentResponseDTO {
+    string Postid = 1;
+    int32 Content = 2;
+    google.protobuf.Timestamp Date = 3;
+}
+message StatusResponse {
+    bool succes = 1;
+}
