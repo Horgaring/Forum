@@ -43,11 +43,9 @@ public static class ConfigurationExtensions
     public  static IApplicationBuilder UseSeed<TContext>(this IApplicationBuilder app, IWebHostEnvironment env)
         where TContext : DbContext
     {
-        Log.Information("start Seed Data");
         using var scope = app.ApplicationServices.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TContext>();
         db.Database.MigrateAsync().GetAwaiter().GetResult();
-        Log.Information("end Seed Data");
         if (env.IsEnvironment("test"))
         {
             

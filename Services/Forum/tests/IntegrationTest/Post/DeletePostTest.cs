@@ -18,7 +18,7 @@ public class DeletePostTest:  PostIntegrationTest
     {
         var command = new Application.PostRequests.DeletePostRequest()
         {
-            id = InitialData.Post.Id
+            id = pInitialData.Post.Id
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));

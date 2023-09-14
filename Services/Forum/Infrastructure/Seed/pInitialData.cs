@@ -2,7 +2,7 @@ using Domain;
 
 namespace Infrastructure.Seed;
 
-public static class InitialData
+public static class pInitialData
 {
     private readonly static Guid _id = Guid.NewGuid();
     public static Post Post

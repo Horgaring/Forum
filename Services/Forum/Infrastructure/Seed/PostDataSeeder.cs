@@ -23,7 +23,7 @@ public class PostDataSeeder : IDataSeeder
     {
         if (!await _dbContext.Post.AnyAsync())
         {
-            await _dbContext.Post.AddRangeAsync(InitialData.Post);
+            await _dbContext.Post.AddRangeAsync(pInitialData.Post);
             await _dbContext.SaveChangesAsync();
             
         }

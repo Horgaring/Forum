@@ -16,9 +16,9 @@ public class UpdatePostTest:  PostIntegrationTest
     {
         var command = new Application.PostRequests.UpdatePostRequest()
         {
-            Description = InitialData.Post.Description,
-            Title = InitialData.Post.Title,
-            Userid = InitialData.Post.Userid
+            Description = pInitialData.Post.Description,
+            Title = pInitialData.Post.Title,
+            Userid = pInitialData.Post.Userid
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));
