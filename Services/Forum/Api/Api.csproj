@@ -19,14 +19,16 @@
       <PackageReference Include="Grpc.AspNetCore" Version="2.56.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.10" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="Serilog" Version="3.0.2-dev-02044" />
       <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     </ItemGroup>
 
@@ -44,6 +46,8 @@
         <HintPath>..\..\..\..\..\.nuget\packages\identitymodel\6.1.0\lib\net6.0\IdentityModel.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+
 
 
 

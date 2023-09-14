@@ -7,6 +7,7 @@ using Serilog;
 using Identity.Mediatr;
 using Identityserver;
 using Identityserver.Data;
+using Identityserver.Exceptions;
 
 
 namespace Identity;

@@ -21,7 +21,6 @@ public class  SqlConnectionFactory: ISqlconnectionfactory
 
     
 }
-
 public interface ISqlconnectionfactory
 {
     public  IDbConnection Create();

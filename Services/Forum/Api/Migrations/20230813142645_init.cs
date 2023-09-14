@@ -24,7 +24,7 @@ namespace Shop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Forum", x => x.Id);
+                    table.PrimaryKey("PK_Api", x => x.Id); 
                 });
         }
 

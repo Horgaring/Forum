@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Middleware;
 using Identity;
 using Identityserver;
+using Microsoft.IdentityModel.Logging;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -8,7 +9,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 Log.Information("Starting up");
-
 try
 {
     var builder = WebApplication.CreateBuilder(args);

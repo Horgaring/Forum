@@ -12,7 +12,6 @@ public class UpdatePostRequest : IRequest
     public string Userid { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }
-    public DateTime Date { get; set; }
 }
 public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
 {
@@ -25,8 +24,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
     public async Task Handle(UpdatePostRequest request, CancellationToken cancellationToken)
     {
        var post  = await _db.Post.SingleOrDefaultAsync(op => op.Userid == request.Userid
-                                                 && op.Title == request.Title
-                                                 && op.Date == request.Date);
+                                                 && op.Title == request.Title);
        if (post is null)
        {
            throw new PostNotFountException(StatusCode.NotFound,null);
