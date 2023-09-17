@@ -1,8 +1,12 @@
+using System.Collections.Immutable;
 using BuildingBlocks;
+using BuildingBlocks.Extension;
 using BuildingBlocks.Middleware;
 using BuildingBlocks.TestBase;
+using Infrastructure.Bus;
 using Infrastructure.Context;
 using Infrastructure.Seed;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,12 +16,13 @@ namespace Infrastructure.Configurations;
 
 public static class Configuration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddBroker(configuration);
         services.AddScoped<IDataSeeder, CommentDataSeeder>();
         services.AddGrpc(option => option.Interceptors.Add<Exceptioninterceptor>());
         services.AddDbContext<CommentDbContext>(op =>
-            op.UseNpgsql(config.GetConnectionString("DefaultConnection")));
+            op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>
@@ -30,5 +35,9 @@ public static class Configuration
             });
         return services;
     }
+    
+    
 
+    
+    
 }

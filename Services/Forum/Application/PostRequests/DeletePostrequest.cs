@@ -1,7 +1,9 @@
 using System.Net;
 using Application.Exceptions;
+using BuildingBlocks.Events;
 using Grpc.Core;
 using Infrastructure.Context;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,7 @@ public class DeletePostRequest : IRequest<bool>
 public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
 {
     private readonly PostDbContext _db;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     public DeletePostHandler(PostDbContext db)=>
         (_db) = (db);
@@ -29,6 +32,10 @@ public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
         _db.Post.Remove(post);
         if (await _db.SaveChangesAsync() > 0)
         {
+            await _publishEndpoint.Publish<DeletedPostEvent>(new DeletedPostEvent()
+            {
+                PostId = post.Id
+            }, cancellationToken);
             return true;
         }
         return false;

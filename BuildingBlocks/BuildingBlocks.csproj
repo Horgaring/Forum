@@ -68,6 +68,7 @@
         <HintPath>..\..\..\.nuget\packages\xunit.extensibility.core\2.5.0\lib\netstandard1.1\xunit.core.dll</HintPath>
       </Reference>
     
+
     </ItemGroup>
 
 
