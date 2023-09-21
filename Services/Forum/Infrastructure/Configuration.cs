@@ -19,6 +19,7 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
+        services.AddBroker(config);
         services.AddScoped<IDataSeeder, PostDataSeeder>();
         services.AddGrpc(option => option.Interceptors.Add<Exceptioninterceptor>());
         services.AddDbContext<PostDbContext>(op =>

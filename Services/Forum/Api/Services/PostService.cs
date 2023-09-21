@@ -1,10 +1,11 @@
 using Application.PostRequests;
-using AutoMapper;
+using Mapster;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcService1;
 using IdentityModel;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -13,11 +14,11 @@ namespace Api.Services;
 
 public class PostService : Post.PostBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
     
-    public PostService(IMediator mediator,IMapper mapper)=>
-        (_mediator,_mapper) = (mediator,mapper);
+    
+    public PostService(IMediator mediator)=>
+        (_mediator) = (mediator);
 
     public override async Task<PostResponseDTO> CreatePost(PostRequestDTO request, ServerCallContext context)
     {
@@ -41,12 +42,7 @@ public class PostService : Post.PostBase
 
     public override async Task<PostsResponseDTO> GetPosts(GetPostRequestDTO request, ServerCallContext context)
     {
-        var getPost = new Application.PostRequests.GetPostRequest()
-        {
-            Query = request.Query,
-            PageNum = request.Pagenum,
-            PageSize = request.Pagesize
-        };
+        var getPost = request.Adapt<GetPostRequest>();
         var res = await _mediator.Send(getPost);
         var result = new PostsResponseDTO();
         result.ResponseDto.AddRange(res);

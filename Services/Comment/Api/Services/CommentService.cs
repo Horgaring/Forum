@@ -1,8 +1,10 @@
 using Application.Requests;
 using AutoMapper;
+using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcService1;
+using Mapster;
 using MediatR;
 using GetCommentRequest = GrpcService1.GetCommentRequest;
 
@@ -10,14 +12,14 @@ namespace Api.Services;
 
 public class CommentService : GrpcService1.Comment.CommentBase
 {
-    private readonly IMapper _mapper;
+    
     private readonly IMediator _mediator;
     
     public CommentService(IMediator mediator,IMapper mapper)=>
-        (_mediator,_mapper) = (mediator,mapper);
+        (_mediator) = (mediator);
     public async override Task<CommentResponseDTO> CreateComment(CommentRequestDTO commentdto, ServerCallContext context)
     {
-        var request =  _mapper.Map<CreateCommentRequest>(commentdto);
+        var request =  commentdto.Adapt<CreateCommentRequest>();
         var comment = await _mediator.Send(request);
         return new CommentResponseDTO()
         {
@@ -29,10 +31,23 @@ public class CommentService : GrpcService1.Comment.CommentBase
 
     public async override Task<StatusResponse> DeleteComment(DeleteCommentRequestDTO commentdto, ServerCallContext context)
     {
-        var request =  _mapper.Map<DeleteCommentRequest>(commentdto);
+        var request =  commentdto.Adapt<DeleteCommentRequest>();
         await _mediator.Send(request);
         return new StatusResponse(){Succes = true};
     }
 
-    
+    public override async Task<CommentsResponse> GetComments(GetCommentRequest requestdto, ServerCallContext context)
+    {
+        var query =  requestdto.Adapt<Application.Requests.GetCommentRequest>();
+        var result = new CommentsResponse();
+        result.ResponseDtos.AddRange(await _mediator.Send(query));
+        return result;
+    }
+
+    public override async Task<StatusResponse> UpdateComment(CommentRequestDTO request, ServerCallContext context)
+    {
+        var command =  request.Adapt<Application.Requests.GetCommentRequest>();
+        var result = await _mediator.Send(command);
+        return new StatusResponse(){Succes = true};
+    }
 }

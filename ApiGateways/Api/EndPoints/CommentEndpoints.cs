@@ -2,6 +2,7 @@ using Application.DTOs;
 using GrpcClientcomment;
 using Infrastructure;
 using Infrastructure.Clients;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using GetCommentRequest = Application.DTOs.GetCommentRequest;
 
@@ -21,11 +22,7 @@ public static class CommentEndpoints
         ,[FromBody]CommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-       var resp = await service.UpdateCommentAsync(new CommentRequestDTO()
-        {
-            Content = request.Content,
-            Id = request.Id
-        });
+       var resp = await service.UpdateCommentAsync(request.Adapt<CommentRequestDTO>());
        if (resp == false)
        {
            return Results.BadRequest();
@@ -37,12 +34,7 @@ public static class CommentEndpoints
         ,[FromBody]GetCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.GetCommentAsync(new GrpcClientcomment.GetCommentRequest()
-        {
-            Listnum = request.Listnum,
-            Listsize = request.Listzize,
-            Postid = request.Postid
-        });
+        var resp = await service.GetCommentAsync(request.Adapt<GrpcClientcomment.GetCommentRequest>());
         return Results.Ok(resp);
     }
 
@@ -50,10 +42,7 @@ public static class CommentEndpoints
         ,[FromBody]DeleteCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.RemoveCommentAsync(new DeleteCommentRequestDTO()
-        {
-            Id = request.Id
-        });
+        var resp = await service.RemoveCommentAsync(request.Adapt<DeleteCommentRequestDTO>());
         if (resp == false)
         {
             return Results.BadRequest();
@@ -65,11 +54,7 @@ public static class CommentEndpoints
         ,[FromBody]CommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.CreateCommentAsync(new CommentRequestDTO()
-        {
-            Content = request.Content,
-            Id = request.Id
-        });
+        var resp = await service.CreateCommentAsync(request.Adapt<CommentRequestDTO>());
         return Results.CreatedAtRoute<CommentResponseDTO>(value: resp);
     }
 }
