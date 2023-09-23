@@ -23,12 +23,6 @@
         <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\Application\Application.csproj" />

@@ -9,12 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Dapper" Version="2.0.151" />
       <PackageReference Include="Grpc.AspNetCore" Version="2.56.0" />
       <PackageReference Include="Mapster" Version="7.3.0" />
@@ -50,6 +44,13 @@
 
 
 
+
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
 
 
 </Project>
