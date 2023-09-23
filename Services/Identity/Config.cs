@@ -4,6 +4,7 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
 using IdentityModel;
+using Identityserver.Constants;
 
 namespace Identityserver;
 
@@ -19,7 +20,9 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("api"),
+            new(IsConstants.StandardScopes.IdentityApi),
+            new(IsConstants.StandardScopes.CommentApi),
+            new(IsConstants.StandardScopes.PostApi),
         };
 
     public static IEnumerable<Client> Clients =>
@@ -41,7 +44,9 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "api",
+                    IsConstants.StandardScopes.IdentityApi,
+                    IsConstants.StandardScopes.PostApi,
+                    IsConstants.StandardScopes.CommentApi
                 }
             },
 

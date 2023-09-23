@@ -48,8 +48,12 @@ public class RegisterNewUserValidator : AbstractValidator<RegisterUserRequest>
 {
     public RegisterNewUserValidator()
     {
-        RuleFor(x => x.Password).NotEmpty().WithMessage("Please enter the password");
-        RuleFor(x => x.Username).NotEmpty().WithMessage("Please enter the username");
+        RuleFor(x => x.Password).NotEmpty().WithMessage("Please enter the password")
+            .MinimumLength(6).WithMessage("password must be more than 6 characters")
+            .MaximumLength(15).WithMessage("pssword must be less  15 characters");
+        RuleFor(x => x.Username).NotEmpty().WithMessage("Please enter the username")
+            .MinimumLength(3).WithMessage("name must be more than 3 characters")
+            .MaximumLength(10).WithMessage("name must be less  10 characters");
         RuleFor(x => x.Email).NotEmpty().WithMessage("Please enter the last email")
             .EmailAddress().WithMessage("A valid email is required");
     }
