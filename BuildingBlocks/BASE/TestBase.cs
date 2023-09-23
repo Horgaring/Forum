@@ -10,11 +10,13 @@ using System.Security.Claims;
 using System.Globalization;
 using DotNet.Testcontainers.Containers;
 using Grpc.Net.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 
 namespace BuildingBlocks.TestBase;
 
@@ -26,6 +28,7 @@ public class TestFixture<TEntryPoint> : IAsyncLifetime
     private readonly WebApplicationFactory<TEntryPoint> _factory;
     private Action<IServiceCollection> TestRegistrationServices { get; set; }
     private PostgreSqlContainer DbTestcontainer;
+    private RabbitMqContainer BusTestcontainer;
     public CancellationTokenSource CancellationTokenSource;
     public HttpClient HttpClient
     {
@@ -48,6 +51,8 @@ public class TestFixture<TEntryPoint> : IAsyncLifetime
         _factory = new WebApplicationFactory<TEntryPoint>()
             .WithWebHostBuilder(builder =>
             {
+                builder.ConfigureAppConfiguration(AddCustomAppSettings);
+                
                 builder.ConfigureServices(services =>
                 {
                     builder.UseEnvironment("test");
@@ -55,6 +60,17 @@ public class TestFixture<TEntryPoint> : IAsyncLifetime
                 });
             });
     }
+
+    private void AddCustomAppSettings(WebHostBuilderContext webHostBuilderContext, IConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.AddInMemoryCollection(new KeyValuePair<string, string>[]
+        {
+            new("MessageBroker:Host", BusTestcontainer.Hostname),
+            new("MessageBroker:UserName", "guest"),
+            new("MessageBroker:Password", "guest"),
+        }!);
+    }
+
 
     public async Task InitializeAsync()
     {
@@ -113,13 +129,15 @@ public class TestFixture<TEntryPoint> : IAsyncLifetime
     private async Task StartTestContainerAsync()
     {
         DbTestcontainer = TestContainers.PostgresTestContainer();
-        
+        BusTestcontainer = TestContainers.RabbitMQTestContainer();
         await DbTestcontainer.StartAsync();
+        await BusTestcontainer.StartAsync();
     }
 
     private async Task StopTestContainerAsync()
     {
         await DbTestcontainer.StopAsync();
+        await BusTestcontainer.StopAsync();
     }
 
     public ILogger CreateLogger(ITestOutputHelper outputHelper)
@@ -145,6 +163,15 @@ internal class TestContainers
     {
         return new PostgreSqlBuilder()
             .WithDockerEndpoint("unix:///var/run/docker.sock")
+            .Build();
+    }
+
+    public static RabbitMqContainer RabbitMQTestContainer()
+    {
+        return new RabbitMqBuilder()
+            .WithDockerEndpoint("unix:///var/run/docker.sock")
+            .WithUsername("guest")
+            .WithPassword("guest")
             .Build();
     }
 }
