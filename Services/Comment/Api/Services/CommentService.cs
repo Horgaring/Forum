@@ -1,9 +1,11 @@
 using Application.Requests;
 using AutoMapper;
+using Domain;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcService1;
+using IdentityModel;
 using Mapster;
 using MediatR;
 using GetCommentRequest = GrpcService1.GetCommentRequest;
@@ -19,7 +21,13 @@ public class CommentService : GrpcService1.Comment.CommentBase
         (_mediator) = (mediator);
     public async override Task<CommentResponseDTO> CreateComment(CommentRequestDTO commentdto, ServerCallContext context)
     {
+        var httpcontext = context.GetHttpContext();
         var request =  commentdto.Adapt<CreateCommentRequest>();
+        request.customerInfo = new CustomerInfo()
+        {
+            Id = httpcontext.User.Claims.First(p => p.Type == JwtClaimTypes.Subject).Value,
+            Name = httpcontext.User.Claims.First(p => p.Type == JwtClaimTypes.Name).Value
+        };
         var comment = await _mediator.Send(request);
         return new CommentResponseDTO()
         {

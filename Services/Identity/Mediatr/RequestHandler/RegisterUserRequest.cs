@@ -1,8 +1,8 @@
 using System.Net;
 using Duende.IdentityServer.Models;
 using FluentValidation;
-using Identity.Models;
 using Identityserver.Exceptions;
+using Identityserver.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

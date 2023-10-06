@@ -1,13 +1,15 @@
 using BuildingBlocks.Middleware;
 using Duende.IdentityServer;
+using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Test;
-using Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Identity.Mediatr;
 using Identityserver;
 using Identityserver.Data;
 using Identityserver.Exceptions;
+using Identityserver.Models;
+using Identityserver.Services;
 
 
 namespace Identity;
@@ -42,6 +44,7 @@ internal static class HostingExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.addCustomMediatR();
+        builder.Services.AddTransient<IProfileService, ProfileService>();
         builder.Services
             .AddIdentityServer(options =>
             {
@@ -57,8 +60,8 @@ internal static class HostingExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
-            .AddAspNetIdentity<User>();
-        
+            .AddAspNetIdentity<User>()
+            .AddProfileService<ProfileService>();
             
 
         builder.Services.AddAuthentication()
@@ -78,18 +81,12 @@ internal static class HostingExtensions
 
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
-        
+        app.UseMiddleware<ExceptionMiddleware>();
         app.UseSerilogRequestLogging();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
         app.UseCors();
         app.UseStaticFiles();
         app.UseIdentityServer();
         app.UseAuthorization();
-        app.UseMiddleware<ExceptionMiddleware>();
         app.MapControllers();
         
         app.MapRazorPages()
