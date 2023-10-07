@@ -1,5 +1,7 @@
 using BuildingBlocks.Events.Comment;
 using Domain;
+using Domain.Entities;
+using Domain.ValueObjects;
 using Infrastructure.Context;
 using MassTransit;
 using MediatR;

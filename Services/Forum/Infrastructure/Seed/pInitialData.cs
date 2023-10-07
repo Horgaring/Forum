@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Entities;
 
 namespace Infrastructure.Seed;
 

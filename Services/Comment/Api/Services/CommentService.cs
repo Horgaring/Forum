@@ -1,6 +1,7 @@
 using Application.Requests;
 using AutoMapper;
 using Domain;
+using Domain.ValueObjects;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;

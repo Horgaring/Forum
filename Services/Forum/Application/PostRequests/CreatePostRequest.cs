@@ -1,5 +1,6 @@
 using Application.Exceptions;
 using Domain;
+using Domain.Entities;
 using Grpc.Core;
 using MediatR;
 using Infrastructure.Context;

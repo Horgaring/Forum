@@ -1,16 +1,11 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 using ILogger = Serilog.ILogger;
-using System.Security.Claims;
-using System.Globalization;
-using DotNet.Testcontainers.Containers;
 using Grpc.Net.Client;
-using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
