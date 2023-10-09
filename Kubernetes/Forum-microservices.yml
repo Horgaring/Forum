@@ -1,1 +1,136 @@
- 
+# #######################################################
+# #  Postgres
+# #######################################################
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  containers:
+    - args:
+        - postgres
+        - -c
+        - wal_level=logical
+        - -c
+        - max_prepared_transactions=10
+      env:
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+      image: postgres:latest
+      name: postgres
+      ports:
+        - containerPort: 5432
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+---
+# #######################################################
+# #  Rabbitmq
+# #######################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:latest
+        ports:
+        - containerPort: 5672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: guest
+        - name: RABBITMQ_DEFAULT_PASS
+          value: guest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+  - name: amqp
+    protocol: TCP
+    port: 5672
+    targetPort: 5672
+  type: ClusterIP
+---
+
+# #######################################################
+#   Identity
+# #######################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-deployment
+  labels:
+    app: identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity
+  template:
+    metadata:
+      labels:
+        app: identity
+    spec:
+      containers:
+        - image: forum/identity:latest
+          name: identity
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: docker
+          - name: ASPNETCORE_URLS
+            value: http://+
+          volumeMounts:
+          - name: appsettings-volume
+            mountPath: /app/Settings
+      volumes:
+      - name: appsettings-volume
+        configMap:
+          name: appsettings
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity
+spec:
+  selector:
+    app: identity
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+---
