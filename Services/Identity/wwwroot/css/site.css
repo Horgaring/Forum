@@ -1,11 +1,16 @@
 ﻿.welcome-page .logo {
-  width: 64px;
+  width: 0px;
 }
 
 .icon-banner {
   width: 32px;
 }
-
+body {
+  margin:0;
+  padding:0;
+  font-family: sans-serif;
+  background: linear-gradient(#141e30, #243b55);
+}
 .body-container {
   margin-top: 60px;
   padding-bottom: 40px;

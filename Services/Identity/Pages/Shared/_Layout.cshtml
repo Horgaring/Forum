@@ -9,17 +9,24 @@
 
     <link rel="icon" type="image/x-icon" href="~/favicon.ico"/>
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico"/>
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/lib/bootstrap4-glyphicons/css/bootstrap-glyphicons.min.css"/>
+    
     <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="~/css/Login.css"/>
+    <style>
+        .body {
+          margin:0;
+          padding:0;
+          font-family: sans-serif;
+          background: linear-gradient(#141e30, #243b55);
+        }
+    </style>
 </head>
-<body>
-<partial name="_Nav"/>
-
-<div class="container body-container">
+<body class="body">
+<div class="body-container container">
     @RenderBody()
 </div>
+    
+
 
 <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
