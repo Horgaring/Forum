@@ -1,0 +1,29 @@
+@page
+@model Identityserver.Pages.Account.Signup.Index
+
+
+
+
+            <div class="login-box">
+                <h2>Signup</h2>
+                 <form form asp-page="/Account/Signup/Index">
+                     <input type="hidden" asp-for="Input.ReturnUrl"/>
+
+                     <div class="user-box">
+                         <input asp-for="Input.Email" autofocus>
+                         <label asp-for="Input.Email"></label>
+                         </div>
+                     <div class="user-box">
+                         <input asp-for="Input.Username" autofocus>
+                         <label asp-for="Input.Username"></label>
+                     </div>
+                     <div class="user-box">
+                         <input type="password" asp-for="Input.Password" autocomplete="off">
+                         <label asp-for="Input.Password"></label>
+                     </div>
+                     <button class="btn" name="Input.Button" >Signup</button>
+                 </form>
+            </div>
+        }
+       
+    

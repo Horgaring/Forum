@@ -40,4 +40,8 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Account\Signup\Signup.cshtml" />
+    </ItemGroup>
 </Project>

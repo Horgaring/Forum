@@ -63,15 +63,13 @@ public class Index : PageModel
         
         if (ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberLogin,
+            var userlogin = await _userManager.FindByEmailAsync(Input.Email);
+            var result = await _signInManager.PasswordSignInAsync(userlogin.UserName, Input.Password, Input.RememberLogin,
                 lockoutOnFailure: true);
-            Log.Information(Input.Username);
+            Log.Information(userlogin.UserName);
             Log.Information(Input.Password);
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(Input.Username);
-                
-
                 if (context != null)
                 {
                     if (context.IsNativeClient())
@@ -101,7 +99,7 @@ public class Index : PageModel
                 }
             }
 
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials",
+            await _events.RaiseAsync(new UserLoginFailureEvent(userlogin.UserName, "invalid credentials",
                 clientId: context?.Client.ClientId));
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
@@ -129,7 +127,7 @@ public class Index : PageModel
                 EnableLocalLogin = local,
             };
 
-            Input.Username = context?.LoginHint;
+            Input.Email = context?.LoginHint;
 
             if (!local)
             {
