@@ -3,6 +3,7 @@ using Duende.IdentityServer.Models;
 using FluentValidation;
 using Identityserver.Exceptions;
 using Identityserver.Models;
+using Identityserver.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,15 +14,17 @@ public class RegisterUserRequest: IRequest
     public string Username { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
+    public IFormFile File { get; set; }
 }
 
 public class RegisterUserHandler : IRequestHandler<RegisterUserRequest>
 {
     
     private readonly UserManager<User> _userManager;
+    private readonly IImageService _image;
 
-    public RegisterUserHandler(UserManager<User> userm)=>
-        (_userManager) = (userm);
+    public RegisterUserHandler(UserManager<User> userm,IImageService image)=>
+        (_userManager,_image) = (userm,image);
 
 
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
@@ -34,14 +37,14 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserRequest>
             Date = DateTime.UtcNow
         };
         var identityResult = await _userManager.CreateAsync(user, request.Password);
-        
-
         if (identityResult.Succeeded == false)
         {
             throw new RegisterUserException("failed Register User",
                 HttpStatusCode.BadRequest,
                 identityResult.Errors.Select(op => op.Description).ToArray());
         }
+        var userid =  (await _userManager.FindByEmailAsync(user.Email)).Id;
+        _image.SaveImage(request.File,userid);
     }
 }
 public class RegisterNewUserValidator : AbstractValidator<RegisterUserRequest>

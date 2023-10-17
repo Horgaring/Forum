@@ -9,6 +9,7 @@ using Identityserver;
 using Identityserver.Data;
 using Identityserver.Exceptions;
 using Identityserver.Models;
+using Identityserver.Models.Store;
 using Identityserver.Services;
 
 
@@ -45,6 +46,8 @@ internal static class HostingExtensions
 
         builder.Services.addCustomMediatR();
         builder.Services.AddTransient<IProfileService, ProfileService>();
+        builder.Services.AddScoped<IImageStore, FileSystemStore>();
+        builder.Services.AddScoped<IImageService, ImageService>();
         builder.Services
             .AddIdentityServer(options =>
             {

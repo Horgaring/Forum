@@ -152,7 +152,35 @@ ul{
     top: 100%;
   }
 }
-
+.hidden{
+  display: none;
+}
+.avatar{
+  background-image: url('../Assets/Untitled.jpg');
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  border-radius: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.labelAvatar:hover{
+  background-color: #03e9f4;
+  color: #fff;
+}
+.labelAvatar{
+  border: solid 1px #03e9f4;
+  text-align: center;
+  margin-top: 18px;
+  margin-bottom: 19px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  color: #03e9f4;
+  padding: 10px;
+  transition: all 1s;
+}
 .login-box a span:nth-child(3) {
   bottom: 0;
   right: -100%;

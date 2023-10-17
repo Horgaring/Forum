@@ -3,6 +3,7 @@ using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using Identityserver.Mediatr.RequestHandler;
 using Identityserver.Models;
+using Identityserver.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -58,11 +59,11 @@ public class Index : PageModel
         {
             Email = Input.Email,
             Password = Input.Password,
-            Username = Input.Username
+            Username = Input.Username,
+            File = Input.File
         };
         await _mediator.Send(request);
         return RedirectToPage("Login", Input.ReturnUrl);
-
     }
 
     private async Task BuildModelAsync(string returnUrl)
