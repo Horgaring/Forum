@@ -7,15 +7,28 @@ import "google/protobuf/timestamp.proto";
 package comment;
 
 
-service Comment {
+service Comment  {
 
-  rpc CreateComment (CommentRequestDTO) returns (CommentResponseDTO);
-  rpc DeleteComment (DeleteCommentRequestDTO) returns (StatusResponse);
-  rpc UpdateComment (CommentRequestDTO) returns (StatusResponse);
-  rpc GetComments (GetCommentRequest) returns (CommentsResponse);
+    rpc CreateComment (CreateCommentRequestDTO) returns (CommentResponseDTO);
+    rpc CreateSubComment (CreateSubCommentRequestDTO) returns (CommentResponseDTO);
+    rpc DeleteComment (DeleteCommentRequestDTO) returns (StatusResponse);
+    rpc UpdateComment (CommentRequestDTO) returns (StatusResponse);
+    rpc GetComments (GetCommentRequest) returns (CommentsResponse);
 }
 
+message CreateCommentRequestDTO {
 
+    int32 id = 1;
+    string Content = 2;
+    string PostId = 3;
+}
+message CreateSubCommentRequestDTO {
+
+    int32 id = 1;
+    string Content = 2;
+    string PostId = 3;
+    string ParentCommetn = 4;
+}
 message CommentRequestDTO {
     int32 id = 1;
     string Content = 2;
@@ -33,7 +46,7 @@ message CommentsResponse {
 }
 message CommentResponseDTO {
     string Postid = 1;
-    int32 Content = 2;
+    string Content = 2;
     google.protobuf.Timestamp Date = 3;
 }
 message StatusResponse {

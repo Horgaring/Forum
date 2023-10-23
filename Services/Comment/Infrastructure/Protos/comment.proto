@@ -9,14 +9,27 @@ package comment;
 
 service Comment {
 
-    rpc CreateComment (CommentRequestDTO) returns (CommentResponseDTO);
+    rpc CreateComment (CreateCommentRequestDTO) returns (CommentResponseDTO);
+    rpc CreateSubComment (CreateSubCommentRequestDTO) returns (CommentResponseDTO);
     rpc DeleteComment (DeleteCommentRequestDTO) returns (StatusResponse);
-    rpc UpdateComment (CommentRequestDTO) returns (StatusResponse);
+    rpc UpdateComment (UpdateCommentRequestDTO) returns (StatusResponse);
     rpc GetComments (GetCommentRequest) returns (CommentsResponse);
 }
 
+message CreateCommentRequestDTO {
 
-message CommentRequestDTO {
+    int32 id = 1;
+    string Content = 2;
+    string PostId = 3;
+}
+message CreateSubCommentRequestDTO {
+
+    int32 id = 1;
+    string Content = 2;
+    string PostId = 3;
+    string ParentCommetn = 4;
+}
+message UpdateCommentRequestDTO {
     int32 id = 1;
     string Content = 2;
 }

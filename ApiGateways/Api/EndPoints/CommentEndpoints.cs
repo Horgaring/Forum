@@ -19,10 +19,10 @@ public static class CommentEndpoints
     }
 
     private async static Task<IResult> UpdateComment(HttpContext context
-        ,[FromBody]CommentRequest request
+        ,[FromBody]UpdateCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-       var resp = await service.UpdateCommentAsync(request.Adapt<CommentRequestDTO>());
+       var resp = await service.UpdateCommentAsync(request.Adapt<UpdateCommentRequestDTO>());
        if (resp == false)
        {
            return Results.BadRequest();
@@ -51,10 +51,17 @@ public static class CommentEndpoints
     }
 
     private async static Task<IResult> CreateComment(HttpContext context
-        ,[FromBody]CommentRequest request
+        ,[FromBody]CreateCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.CreateCommentAsync(request.Adapt<CommentRequestDTO>());
+        var resp = await service.CreateCommentAsync(request.Adapt<CreateCommentRequestDTO>());
+        return Results.CreatedAtRoute<CommentResponseDTO>(value: resp);
+    }
+    private async static Task<IResult> CreateSubComment(HttpContext context
+        ,[FromBody]CreateSubCommentRequest request
+        ,[FromServices] CommentGrpcService service)
+    {
+        var resp = await service.CreateSubCommentAsync(request.Adapt<CreateSubCommentRequestDTO>());
         return Results.CreatedAtRoute<CommentResponseDTO>(value: resp);
     }
 }

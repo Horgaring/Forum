@@ -14,7 +14,12 @@ public class CommentGrpcService
         _client = client;
     }
 
-    public async Task<CommentResponseDTO> CreateCommentAsync(CommentRequestDTO request)
+    public async Task<CommentResponseDTO> CreateSubCommentAsync(CreateSubCommentRequestDTO request)
+    {
+        var resp = await _client.CreateSubCommentAsync(request);
+        return resp;
+    }
+    public async Task<CommentResponseDTO> CreateCommentAsync(CreateCommentRequestDTO request)
     {
         var resp = await _client.CreateCommentAsync(request);
         return resp;
@@ -26,7 +31,7 @@ public class CommentGrpcService
         if (code.Succes == true) return true;
         return false;
     }
-    public async Task<bool> UpdateCommentAsync(CommentRequestDTO request)
+    public async Task<bool> UpdateCommentAsync(UpdateCommentRequestDTO request)
     {
         var code = await _client.UpdateCommentAsync(request);
         if (code == null) return false;

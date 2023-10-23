@@ -12,6 +12,7 @@ public class CommentDbContext: DbContext
     }
     
     public DbSet<Comment> Comment { get; set; }
+    public DbSet<SubComment> SubComment { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

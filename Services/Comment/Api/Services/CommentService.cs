@@ -20,7 +20,26 @@ public class CommentService : GrpcService1.Comment.CommentBase
     
     public CommentService(IMediator mediator,IMapper mapper)=>
         (_mediator) = (mediator);
-    public async override Task<CommentResponseDTO> CreateComment(CommentRequestDTO commentdto, ServerCallContext context)
+
+    public override async Task<CommentResponseDTO> CreateSubComment(CreateSubCommentRequestDTO commentdto, ServerCallContext context)
+    {
+        var httpcontext = context.GetHttpContext();
+        var request =  commentdto.Adapt<CreateSubCommentRequest>();
+        request.customerInfo = new CustomerInfo()
+        {
+            Id = httpcontext.User.Claims.First(p => p.Type == JwtClaimTypes.Subject).Value,
+            Name = httpcontext.User.Claims.First(p => p.Type == JwtClaimTypes.Name).Value
+        };
+        var comment = await _mediator.Send(request);
+        return new CommentResponseDTO()
+        {
+            Content = comment.Content,
+            Date = Timestamp.FromDateTime(comment.Date),
+            Postid = comment.Postid.ToString()
+        };
+    }
+
+    public async override Task<CommentResponseDTO> CreateComment(CreateCommentRequestDTO commentdto, ServerCallContext context)
     {
         var httpcontext = context.GetHttpContext();
         var request =  commentdto.Adapt<CreateCommentRequest>();
@@ -53,7 +72,7 @@ public class CommentService : GrpcService1.Comment.CommentBase
         return result;
     }
 
-    public override async Task<StatusResponse> UpdateComment(CommentRequestDTO request, ServerCallContext context)
+    public override async Task<StatusResponse> UpdateComment(UpdateCommentRequestDTO request, ServerCallContext context)
     {
         var command =  request.Adapt<Application.Requests.GetCommentRequest>();
         var result = await _mediator.Send(command);
