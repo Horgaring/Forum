@@ -9,42 +9,42 @@ package comment;
 
 service Comment {
 
-    rpc CreateComment (CreateCommentRequestDTO) returns (CommentResponseDTO);
-    rpc CreateSubComment (CreateSubCommentRequestDTO) returns (CommentResponseDTO);
-    rpc DeleteComment (DeleteCommentRequestDTO) returns (StatusResponse);
-    rpc UpdateComment (UpdateCommentRequestDTO) returns (StatusResponse);
-    rpc GetComments (GetCommentRequest) returns (CommentsResponse);
+    rpc CreateComment (CreateCommentRequestGrpc) returns (CommentResponseGrpc);
+    rpc CreateSubComment (CreateSubCommentRequestGrpc) returns (CommentResponseGrpc);
+    rpc DeleteComment (DeleteCommentRequestGrpc) returns (StatusResponse);
+    rpc UpdateComment (UpdateCommentRequestGrpc) returns (StatusResponse);
+    rpc GetComments (GetCommentRequestGrpc) returns (CommentsResponse);
 }
 
-message CreateCommentRequestDTO {
+message CreateCommentRequestGrpc {
 
     int32 id = 1;
     string Content = 2;
     string PostId = 3;
 }
-message CreateSubCommentRequestDTO {
+message CreateSubCommentRequestGrpc {
 
     int32 id = 1;
     string Content = 2;
     string PostId = 3;
     string ParentCommetn = 4;
 }
-message UpdateCommentRequestDTO {
+message UpdateCommentRequestGrpc {
     int32 id = 1;
     string Content = 2;
 }
-message DeleteCommentRequestDTO {
+message DeleteCommentRequestGrpc {
     int32 id = 1;
 }
-message GetCommentRequest {
+message GetCommentRequestGrpc {
     string Postid = 1;
     int32 listsize = 2;
     int32 listnum = 3;
 }
 message CommentsResponse {
-    repeated CommentResponseDTO response_dtos = 1;
+    repeated CommentResponseGrpc response_dtos = 1;
 }
-message CommentResponseDTO {
+message CommentResponseGrpc {
     string Postid = 1;
     string Content = 2;
     google.protobuf.Timestamp Date = 3;

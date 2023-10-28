@@ -8,25 +8,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.PostRequests;
 
-public class GetPostRequest : IRequest<List<PostResponseDTO>>
+public class GetPostRequest : IRequest<List<PostResponseGrpc>>
 {
     public string Query { get; set; }
     public int PageSize{ get; set; }
     public int PageNum { get; set; }
 }
-public class GetPostHandler : IRequestHandler<GetPostRequest,List<PostResponseDTO>>
+public class GetPostHandler : IRequestHandler<GetPostRequest,List<PostResponseGrpc>>
 {
     private readonly ISqlconnectionfactory _Connectionfactory;
 
     public GetPostHandler(ISqlconnectionfactory conf)=>
         (_Connectionfactory) = (conf);
     
-    public Task<List<PostResponseDTO>> Handle(GetPostRequest request, CancellationToken cancellationToken)
+    public Task<List<PostResponseGrpc>> Handle(GetPostRequest request, CancellationToken cancellationToken)
     {
         using var con = _Connectionfactory.Create();
         
         con.Open();
-        var res = con.Query<PostResponseDTO>(
+        var res = con.Query<PostResponseGrpc>(
             sql: """
                  SELECT
                      Title,
@@ -43,7 +43,7 @@ public class GetPostHandler : IRequestHandler<GetPostRequest,List<PostResponseDT
                 PageSize = request.PageSize
             });
         
-        return Task.FromResult<List<PostResponseDTO>>(result: res?.ToList() ?? Enumerable.Empty<PostResponseDTO>().ToList());
+        return Task.FromResult<List<PostResponseGrpc>>(result: res?.ToList() ?? Enumerable.Empty<PostResponseGrpc>().ToList());
 
     }
 }

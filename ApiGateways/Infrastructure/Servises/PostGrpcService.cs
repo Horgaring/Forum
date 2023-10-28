@@ -13,33 +13,29 @@ public class PostGrpcService
         _client = client;
     }
 
-    public async Task<PostResponseDTO?> CreatePostAsync(PostRequestDTO request)
+    public async Task<PostResponseGrpc?> CreatePostAsync(PostRequestGrpc request)
     {
        var resp = await _client.CreatePostAsync(request);
-       if (resp == null)
-       {
-           return null;
-       }
        return resp;
     }
-    public async Task<bool> RemovePostAsync(DeletePostRequestDTO request)
+    public async Task<bool> RemovePostAsync(DeletePostRequestGrpc request)
     {
        var code = await _client.DeletePostAsync(request);
        if (code == null) return false;
        if (code.Succes == true) return true;
        return false;
     }
-    public async Task<bool> UpdatePostAsync(PostRequestDTO request)
+    public async Task<bool> UpdatePostAsync(PostRequestGrpc request)
     {
         var code = await _client.UpdatePostAsync(request);
         if (code == null) return false;
         if (code.Succes == true) return true;
         return false;
     }
-    public async Task<List<PostResponseDTO?>> GetPostAsync(GetPostRequestDTO request)
+    public async Task<List<PostResponseGrpc?>> GetPostAsync(GetPostRequestGrpc request)
     {
         var resp = await _client.GetPostsAsync(request);
-        if (resp == null) return Enumerable.Empty<PostResponseDTO?>().ToList();
+        if (resp == null) return Enumerable.Empty<PostResponseGrpc?>().ToList();
         return resp.ResponseDto.ToList();
     }
     

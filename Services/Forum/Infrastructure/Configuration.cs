@@ -1,9 +1,11 @@
+using System.Reflection;
 using BuildingBlocks;
 using BuildingBlocks.Middleware;
 using BuildingBlocks.TestBase;
 using Grpc.AspNetCore.Server;
 using Infrastructure.Context;
 using IntegrationTest.Seed;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

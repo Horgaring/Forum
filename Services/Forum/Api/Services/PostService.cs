@@ -20,49 +20,38 @@ public class PostService : Post.PostBase
     public PostService(IMediator mediator)=>
         (_mediator) = (mediator);
 
-    public override async Task<PostResponseDTO> CreatePost(PostRequestDTO request, ServerCallContext context)
+    public override async Task<PostResponseGrpc> CreatePost(PostRequestGrpc request, ServerCallContext context)
     {
-        var createpost = new Application.PostRequests.CreatePostRequest()
-        {
-            Userid = context.GetHttpContext().User.Claims
-                .First(op => op.Type ==  JwtClaimTypes.Subject).Value,
-            Title = request.Title,
-            Description = request.Description,
-            Date = DateTime.UtcNow
-        };
-        var succes = await _mediator.Send(createpost);
-        return  new PostResponseDTO()
-        {
-            Userid = createpost.Userid,
-            Title = createpost.Title,
-            Date = Timestamp.FromDateTime(createpost.Date),
-            Description = createpost.Description
-        };
+
+        var createpost = request.Adapt<Application.PostRequests.CreatePostRequest>();
+        createpost.Userid = context.GetHttpContext().User.Claims
+            .First(op => op.Type == JwtClaimTypes.Subject).Value;
+        createpost.Date = DateTime.UtcNow;
+        var result = await _mediator.Send(createpost);
+        var postResponseDTO = result.Adapt<PostResponseGrpc>();
+        postResponseDTO.Date = Timestamp.FromDateTime(result.Date);
+        return postResponseDTO;
     }
 
-    public override async Task<PostsResponseDTO> GetPosts(GetPostRequestDTO request, ServerCallContext context)
+    public override async Task<PostsResponseGrpc> GetPosts(GetPostRequestGrpc request, ServerCallContext context)
     {
         var getPost = request.Adapt<GetPostRequest>();
         var res = await _mediator.Send(getPost);
-        var result = new PostsResponseDTO();
+        var result = new PostsResponseGrpc();
         result.ResponseDto.AddRange(res);
         return result;
     }
 
-    public override async Task<StatusResponse> UpdatePost(PostRequestDTO request, ServerCallContext context)
+    public override async Task<StatusResponse> UpdatePost(PostRequestGrpc request, ServerCallContext context)
     {
-        var updatePost = new Application.PostRequests.UpdatePostRequest()
-        {
-            Userid = context.GetHttpContext().User.Claims
-                .First(op => op.Type ==  JwtClaimTypes.Subject).Value,
-            Title = request.Title,
-            Description = request.Description,
-        };
+        var updatePost = request.Adapt<Application.PostRequests.UpdatePostRequest>();
+        updatePost.Userid = context.GetHttpContext().User.Claims
+            .First(op => op.Type ==  JwtClaimTypes.Subject).Value;
         await _mediator.Send(updatePost);
-        return await Task.FromResult(new StatusResponse(){Succes = true});
+        return new StatusResponse(){Succes = true};
     }
 
-    public override async Task<StatusResponse> DeletePost(DeletePostRequestDTO request, ServerCallContext context)
+    public override async Task<StatusResponse> DeletePost(DeletePostRequestGrpc request, ServerCallContext context)
     {
         var deletepost = new Application.PostRequests.DeletePostRequest()
         {

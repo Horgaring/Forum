@@ -2,6 +2,7 @@ using System.Net;
 using Application.DTOs;
 using GrpcClientpost;
 using Infrastructure.Clients;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.EndPoints;
@@ -20,7 +21,7 @@ public static class PostEnpoints
         ,[FromBody]PostRequest request
         ,[FromServices] PostGrpcService service)
     {
-        var resp = await service.UpdatePostAsync(new PostRequestDTO()
+        var resp = await service.UpdatePostAsync(new PostRequestGrpc()
         {
             Description = request.Description,
             Title = request.Title
@@ -36,20 +37,15 @@ public static class PostEnpoints
         ,[FromBody]GetPostRequest request
         ,[FromServices] PostGrpcService service)
     {
-        var resp = await service.GetPostAsync(new GetPostRequestDTO()
-        {
-            Pagenum = request.Pagenum,
-            Pagesize = request.Pagesize,
-            Query = request.Query
-        });
-        return Results.Json<List<PostResponseDTO>>(resp,statusCode:200);
+        var resp = await service.GetPostAsync(request.Adapt<GetPostRequestGrpc>());
+        return Results.Json<List<PostResponseGrpc>>(resp,statusCode:200);
     }
 
     private async static Task<IResult> DeletePost(HttpContext context
         ,[FromBody]DeletePostRequest request
         ,[FromServices] PostGrpcService service)
     {
-        var resp = await service.RemovePostAsync(new DeletePostRequestDTO()
+        var resp = await service.RemovePostAsync(new DeletePostRequestGrpc()
         {
             Id = request.Id
         });
@@ -64,11 +60,7 @@ public static class PostEnpoints
         ,[FromBody]CreatePostRequest request
         ,[FromServices] PostGrpcService service)
     {
-        var resp = await service.CreatePostAsync(new PostRequestDTO()
-        {
-          Description  = request.Description,
-          Title = request.Title
-        });
-        return Results.Json<PostResponseDTO>(resp,statusCode:201);
+        var resp = await service.CreatePostAsync(request.Adapt<PostRequestGrpc>());
+        return Results.Json<PostResponseGrpc>(resp,statusCode:201);
     }
 }

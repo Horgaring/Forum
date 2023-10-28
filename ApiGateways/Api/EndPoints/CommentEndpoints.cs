@@ -22,7 +22,7 @@ public static class CommentEndpoints
         ,[FromBody]UpdateCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-       var resp = await service.UpdateCommentAsync(request.Adapt<UpdateCommentRequestDTO>());
+       var resp = await service.UpdateCommentAsync(request.Adapt<UpdateCommentRequestGrpc>());
        if (resp == false)
        {
            return Results.BadRequest();
@@ -34,7 +34,7 @@ public static class CommentEndpoints
         ,[FromBody]GetCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.GetCommentAsync(request.Adapt<GrpcClientcomment.GetCommentRequest>());
+        var resp = await service.GetCommentAsync(request.Adapt<GrpcClientcomment.GetCommentRequestGrpc>());
         return Results.Ok(resp);
     }
 
@@ -42,7 +42,7 @@ public static class CommentEndpoints
         ,[FromBody]DeleteCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.RemoveCommentAsync(request.Adapt<DeleteCommentRequestDTO>());
+        var resp = await service.RemoveCommentAsync(request.Adapt<DeleteCommentRequestGrpc>());
         if (resp == false)
         {
             return Results.BadRequest();
@@ -54,14 +54,14 @@ public static class CommentEndpoints
         ,[FromBody]CreateCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.CreateCommentAsync(request.Adapt<CreateCommentRequestDTO>());
-        return Results.CreatedAtRoute<CommentResponseDTO>(value: resp);
+        var resp = await service.CreateCommentAsync(request.Adapt<CreateCommentRequestGrpc>());
+        return Results.Json<CommentResponseGrpc>(resp,statusCode:201);
     }
     private async static Task<IResult> CreateSubComment(HttpContext context
         ,[FromBody]CreateSubCommentRequest request
         ,[FromServices] CommentGrpcService service)
     {
-        var resp = await service.CreateSubCommentAsync(request.Adapt<CreateSubCommentRequestDTO>());
-        return Results.CreatedAtRoute<CommentResponseDTO>(value: resp);
+        var resp = await service.CreateSubCommentAsync(request.Adapt<CreateSubCommentRequestGrpc>());
+        return Results.Json<CommentResponseGrpc>(resp,statusCode:201);
     }
 }

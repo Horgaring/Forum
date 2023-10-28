@@ -9,29 +9,29 @@ package post;
 
 service Post {
 
-    rpc CreatePost (PostRequestDTO) returns (PostResponseDTO);
-    rpc DeletePost (DeletePostRequestDTO) returns (StatusResponse);
-    rpc UpdatePost (PostRequestDTO) returns (StatusResponse);
-    rpc GetPosts (GetPostRequestDTO) returns (PostsResponseDTO);
+    rpc CreatePost (PostRequestGrpc) returns (PostResponseGrpc);
+    rpc DeletePost (DeletePostRequestGrpc) returns (StatusResponse);
+    rpc UpdatePost (PostRequestGrpc) returns (StatusResponse);
+    rpc GetPosts (GetPostRequestGrpc) returns (PostsResponseGrpc);
 }
 
 
-message PostRequestDTO {
+message PostRequestGrpc {
     string Title = 1;
     string Description = 2;
 }
-message DeletePostRequestDTO {
+message DeletePostRequestGrpc {
     string id = 1;
 }
-message GetPostRequestDTO {
+message GetPostRequestGrpc {
     string Query = 1;
     int32 Pagesize = 2;
     int32 Pagenum = 3;
 }
-message PostsResponseDTO {
-    repeated PostResponseDTO response_dto = 1;
+message PostsResponseGrpc {
+    repeated PostResponseGrpc response_dto = 1;
 }
-message PostResponseDTO {
+message PostResponseGrpc {
     string Userid = 1;
     string Title = 2;
     string Description = 3;
