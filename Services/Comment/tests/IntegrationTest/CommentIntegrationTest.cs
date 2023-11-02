@@ -1,3 +1,4 @@
+using Api;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 

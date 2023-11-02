@@ -1,3 +1,4 @@
+using Api;
 using Application.Requests;
 using BuildingBlocks.Events;
 using BuildingBlocks.TestBase;

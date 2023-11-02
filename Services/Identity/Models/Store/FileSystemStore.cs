@@ -15,6 +15,10 @@ public class FileSystemStore : IImageStore
 
     public void WriteImage(Stream file,string name)
     {
+        if (!Directory.Exists(_path))
+        {
+            Directory.CreateDirectory(_path);
+        }
         using var stream = new FileStream(Path.Combine(_path, name + ".jpeg"), FileMode.OpenOrCreate);
         file.CopyTo(stream);
     }

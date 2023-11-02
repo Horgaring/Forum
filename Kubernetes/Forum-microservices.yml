@@ -1,4 +1,55 @@
 # #######################################################
+# #  ApiGetaway
+# #######################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigetaway-deployment
+  labels:
+    app: apigetawey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigeteway
+  template:
+    metadata:
+      labels:
+        app: apigeteway
+    spec:
+      containers:
+        - image: forum/apigeteway:1.0
+          name: apigetaway
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: docker
+          - name: ASPNETCORE_URLS
+            value: http://+
+          volumeMounts:
+          - name: appsettings-volume
+            mountPath: /app/Settings
+      volumes:
+      - name: appsettings-volume
+        configMap:
+          name: appsettings
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigeteway
+spec:
+  selector:
+    app: apigeteway
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+---
+# #######################################################
 # #  Postgres
 # #######################################################
 apiVersion: v1
@@ -20,7 +71,7 @@ spec:
           value: postgres
         - name: POSTGRES_USER
           value: postgres
-      image: postgres:latest
+      image: postgres:1.0
       name: postgres
       ports:
         - containerPort: 5432
@@ -59,7 +110,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:latest
+        image: rabbitmq:1.0
         ports:
         - containerPort: 5672
         env:
@@ -103,7 +154,7 @@ spec:
         app: identity
     spec:
       containers:
-        - image: forum/identity:latest
+        - image: forum/identity:1.0
           name: identity
           ports:
             - containerPort: 80

@@ -1,14 +1,11 @@
 using Api.Services;
 using BuildingBlocks.Extension;
-using BuildingBlocks.Middleware;
 using Infrastructure.Configurations;
 using Infrastructure.Context;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
+namespace Api;
 
-internal class Program
+public class Program
 {
     public static void Main(string[] args)
     {

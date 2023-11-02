@@ -9,14 +9,14 @@
 
     <ItemGroup>
       <PackageReference Include="Grpc.AspNetCore" Version="2.56.0" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Npgsql" Version="7.0.4" />
+      <PackageReference Include="Npgsql" Version="7.0.6" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     </ItemGroup>
 
@@ -42,6 +42,8 @@
       <Reference Include="MassTransit">
         <HintPath>..\..\..\..\..\.nuget\packages\masstransit\8.1.0\lib\net7.0\MassTransit.dll</HintPath>
       </Reference>
+
+
 
     </ItemGroup>
 
