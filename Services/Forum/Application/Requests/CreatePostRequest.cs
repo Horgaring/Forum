@@ -1,12 +1,11 @@
 using Application.Exceptions;
-using Domain;
+using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Grpc.Core;
-using MediatR;
 using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 
-namespace Application.PostRequests;
+namespace Application.Requests;
 
 public class CreatePostRequest : IRequest<Post>
 {
@@ -18,10 +17,11 @@ public class CreatePostRequest : IRequest<Post>
 }
 public class CreatePostHandler : IRequestHandler<CreatePostRequest,Post>
 {
-    private readonly PostDbContext _db;
+    private readonly PostRepository _repository;
+    private readonly IUnitOfWork<PostRepository> _uow;
 
-    public CreatePostHandler(PostDbContext db)=>
-        (_db) = (db);
+    public CreatePostHandler(PostRepository repository,IUnitOfWork<PostRepository> uow)=>
+        (_repository,_uow) = (repository,uow);
 
 
     public async Task<Post> Handle(CreatePostRequest request, CancellationToken cancellationToken)
@@ -33,14 +33,14 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest,Post>
             Description = request.Description,
             Date = request.Date
         };
-        var post = _db.Post.SingleOrDefault(post => post.Userid == postentity.Userid
+        var post = _repository.SingleOrDefaultAsync(post => post.Userid == postentity.Userid
                                          && post.Title == postentity.Title);
         if (post != null)
         {
             throw new PostAlreadyExistException(StatusCode.AlreadyExists,null);
         }
-        _db.Post.Add(postentity);
-        await _db.SaveChangesAsync();
+        await _repository.CreateAsync(postentity);
+        await _uow.CommitAsync();
         return postentity;
     }
 }

@@ -1,13 +1,13 @@
-using System.Net;
 using Application.Exceptions;
-using BuildingBlocks.Events;
+using BuildingBlocks.Core.Events.Post;
+using BuildingBlocks.Core.Repository;
 using Grpc.Core;
 using Infrastructure.Context;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.PostRequests;
+namespace Application.Requests;
 
 public class DeletePostRequest : IRequest<bool>
 {
@@ -16,21 +16,23 @@ public class DeletePostRequest : IRequest<bool>
 
 public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
 {
-    private readonly PostDbContext _db;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly PostRepository _repository;
+    private readonly IUnitOfWork<PostRepository> _uow;
 
-    public DeletePostHandler(PostDbContext db)=>
-        (_db) = (db);
+    public DeletePostHandler(PostRepository repository,IUnitOfWork<PostRepository> uow,IPublishEndpoint endp)=>
+        (_repository,_uow,_publishEndpoint) = (repository,uow,endp);
+
     
     public async Task<bool> Handle(DeletePostRequest request, CancellationToken cancellationToken)
     {
-        var post = await _db.Post.SingleOrDefaultAsync(op => op.Id == request.id);
+        var post = await _repository.SingleOrDefaultAsync(op => op.Id == request.id);
         if (post is null)
         {
             throw new PostNotFountException(StatusCode.NotFound,null);
         }
-        _db.Post.Remove(post);
-        if (await _db.SaveChangesAsync() > 0)
+        _repository.Delete(post);
+        if (await _uow.CommitAsync() > 0)
         {
             await _publishEndpoint.Publish<DeletedPostEvent>(new DeletedPostEvent()
             {

@@ -1,8 +1,9 @@
+using BuildingBlocks.Core.Model;
+
 namespace Domain.Entities;
 
-public class Post
+public class Post : Entity<Guid>
 {
-    public Guid Id { get; set; }
     public string Userid { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }

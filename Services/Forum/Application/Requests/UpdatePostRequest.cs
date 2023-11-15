@@ -1,11 +1,12 @@
-using System.Net;
 using Application.Exceptions;
+using BuildingBlocks.Core.Repository;
 using Grpc.Core;
 using Infrastructure.Context;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.PostRequests;
+namespace Application.Requests;
 
 public class UpdatePostRequest : IRequest
 {
@@ -15,15 +16,16 @@ public class UpdatePostRequest : IRequest
 }
 public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
 {
-    private readonly PostDbContext _db;
+    private readonly PostRepository _repository;
+    private readonly IUnitOfWork<PostRepository> _uow;
 
-    public UpdatePostHandler(PostDbContext db)=>
-        (_db) = (db);
+    public UpdatePostHandler(PostRepository repository,IUnitOfWork<PostRepository> uow)=>
+        (_repository,_uow) = (repository,uow);
 
 
     public async Task Handle(UpdatePostRequest request, CancellationToken cancellationToken)
     {
-       var post  = await _db.Post.SingleOrDefaultAsync(op => op.Userid == request.Userid
+       var post  = await _repository.SingleOrDefaultAsync(op => op.Userid == request.Userid
                                                  && op.Title == request.Title);
        if (post is null)
        {
@@ -31,7 +33,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
        }
 
        post.Update(request.Title,request.Description);
-       _db.Post.Update(post);
-       await _db.SaveChangesAsync();
+       _repository.Update(post);
+       await _uow.CommitAsync();
     }
 }

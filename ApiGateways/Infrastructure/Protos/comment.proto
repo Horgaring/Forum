@@ -18,23 +18,23 @@ service Comment {
 
 message CreateCommentRequestGrpc {
 
-    int32 id = 1;
+    string id = 1;
     string Content = 2;
     string PostId = 3;
 }
 message CreateSubCommentRequestGrpc {
 
-    int32 id = 1;
+    string id = 1;
     string Content = 2;
     string PostId = 3;
     string ParentCommetn = 4;
 }
 message UpdateCommentRequestGrpc {
-    int32 id = 1;
+    string id = 1;
     string Content = 2;
 }
 message DeleteCommentRequestGrpc {
-    int32 id = 1;
+    string id = 1;
 }
 message GetCommentRequestGrpc {
     string Postid = 1;

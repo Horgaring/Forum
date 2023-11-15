@@ -1,33 +1,39 @@
 using System.Net;
 using Application.Exception;
+using BuildingBlocks.Core.Repository;
 using Domain;
 using Grpc.Core;
 using Infrastructure.Context;
+using MassTransit;
 using MediatR;
 
 namespace Application.Requests;
 
 public class DeleteCommentRequest: IRequest
 {
-    public int id { get; set; }
+    public Guid id { get; set; }
 }
 public class DeleteCommentHandler : IRequestHandler<DeleteCommentRequest>
 {
-    private readonly CommentDbContext _db;
+    private readonly CommentRepository _repository;
+    private readonly IUnitOfWork<CommentDbContext> _uow;
 
-    public DeleteCommentHandler(CommentDbContext db)=>
-        (_db) = (db);
+    public DeleteCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
+    {
+        _repository = repository;
+        _uow = uow;
+    }
 
 
     public async Task Handle(DeleteCommentRequest request, CancellationToken cancellationToken)
     {
-        var comment = _db.Comment.SingleOrDefault(comment => comment.Id == request.id);
+        var comment = await _repository.SingleOrDefaultAsync(comment => comment.Id == request.id);
         if (comment == null)
         {
             throw new CommentNotFound(StatusCode.NotFound,null);
         }
-        _db.Comment.Remove(comment);
-        await _db.SaveChangesAsync(cancellationToken);
+        _repository.Delete(comment);
+        await _uow.CommitAsync(cancellationToken);
     }
 }
 

@@ -1,4 +1,5 @@
-using BuildingBlocks.Events;
+using BuildingBlocks.Core.Events;
+using BuildingBlocks.Core.Events.Post;
 using Infrastructure.Context;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;

@@ -1,11 +1,11 @@
-using Application.PostRequests;
+using Application.Requests;
 using BuildingBlocks.Validation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
-public static class Configure
+public static class Configuration
 {
     public static IServiceCollection AddApplication(this IServiceCollection service)
     {

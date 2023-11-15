@@ -1,5 +1,6 @@
 using System.Net;
 using Application.Exception;
+using BuildingBlocks.Core.Repository;
 using Grpc.Core;
 using Infrastructure.Context;
 using MediatR;
@@ -12,27 +13,30 @@ public class UpdateCommentRequest: IRequest
     {
         Content = content;
     }
-    public int id { get; set; }
+    public Guid id { get; set; }
     public string Content { get; init; }
 }
 public class UpdateCommentHandler : IRequestHandler<UpdateCommentRequest>
 {
-    private readonly CommentDbContext _db;
+    private readonly CommentRepository _repository;
+    private readonly IUnitOfWork<CommentDbContext> _uow;
 
-    public UpdateCommentHandler(CommentDbContext db)=>
-        (_db) = (db);
-
+    public UpdateCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow)
+    {
+        _repository = repository;
+        _uow = uow;
+    }
 
     public async Task Handle(UpdateCommentRequest request, CancellationToken cancellationToken)
     {
-        var comment = _db.Comment.SingleOrDefault(comment => comment.Id == request.id);
+        var comment = await _repository.SingleOrDefaultAsync(comment => comment.Id == request.id);
         if (comment == null)
         {
             throw new CommentNotFound(StatusCode.NotFound,null);
         }
         comment.Update(request.Content);
-        _db.Comment.Update(comment);
-        await _db.SaveChangesAsync(cancellationToken);
+        _repository.Update(comment);
+        await _uow.CommitAsync(cancellationToken);
     }
 }
 

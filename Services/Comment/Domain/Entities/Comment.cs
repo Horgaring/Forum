@@ -1,13 +1,13 @@
+using BuildingBlocks.Core.Model;
+
 namespace Domain.Entities;
 
-public class Comment
+public class Comment : Entity<Guid>
 {
     public Comment(string content)
     {
         Content = content;
     }
-
-    public int Id { get; set; }
     public Guid Postid { get; set; }
     public string Content { get; set; }
     public DateTime Date { get; set; }

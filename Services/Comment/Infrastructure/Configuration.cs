@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using BuildingBlocks;
+using BuildingBlocks.Core.Repository;
 using BuildingBlocks.Extension;
 using BuildingBlocks.Middleware;
 using BuildingBlocks.TestBase;
@@ -23,6 +24,8 @@ public static class Configuration
         services.AddGrpc(option => option.Interceptors.Add<Exceptioninterceptor>());
         services.AddDbContext<CommentDbContext>(op =>
             op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddTransient<CommentRepository,CommentRepository>();
+        services.AddTransient<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>

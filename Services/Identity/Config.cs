@@ -23,6 +23,7 @@ public static class Config
             new(IsConstants.StandardScopes.IdentityApi),
             new(IsConstants.StandardScopes.CommentApi),
             new(IsConstants.StandardScopes.PostApi),
+            new(),
         };
 
     public static IEnumerable<Client> Clients =>
@@ -39,11 +40,13 @@ public static class Config
                 RedirectUris =           { "http://localhost:3000" },
                 PostLogoutRedirectUris = { "http://localhost:3000" },
                 AllowedCorsOrigins =     { "http://localhost:3000" },
-                
+                AllowOfflineAccess = true,
+                    
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
                     IsConstants.StandardScopes.IdentityApi,
                     IsConstants.StandardScopes.PostApi,
                     IsConstants.StandardScopes.CommentApi

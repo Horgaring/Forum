@@ -1,19 +1,14 @@
-using System.Reflection;
 using BuildingBlocks;
+using BuildingBlocks.Core.Repository;
 using BuildingBlocks.Middleware;
 using BuildingBlocks.TestBase;
-using Grpc.AspNetCore.Server;
 using Infrastructure.Context;
 using IntegrationTest.Seed;
-using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
+using BuildingBlocks.Core.Repository;
 
 namespace Infrastructure;
 
@@ -27,6 +22,8 @@ public static class Configuration
         services.AddDbContext<PostDbContext>(op =>
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api")));
+        services.AddTransient<PostRepository,PostRepository>();
+        services.AddTransient<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddAuthorization();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

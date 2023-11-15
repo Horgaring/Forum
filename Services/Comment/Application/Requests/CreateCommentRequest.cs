@@ -1,4 +1,5 @@
-using BuildingBlocks.Events.Comment;
+using BuildingBlocks.Core.Events.Comment;
+using BuildingBlocks.Core.Repository;
 using Domain;
 using Domain.Entities;
 using Domain.ValueObjects;
@@ -20,17 +21,19 @@ public class CreateCommentRequest: IRequest<Comment>
 }
 public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment>
 {
-    private readonly CommentDbContext _db;
+    private readonly CommentRepository _repository;
+    private readonly IUnitOfWork<CommentDbContext> _uow;
     private readonly IPublishEndpoint _endpoint;
 
-    public CreateCommentHandler(CommentDbContext db, IPublishEndpoint endpoint)
+    public CreateCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
     {
-        (_db) = (db);
+        _repository = repository;
+        _uow = uow;
         _endpoint = endpoint;
     }
 
-
-    public async Task<Comment> Handle(CreateCommentRequest request, CancellationToken cancellationToken)
+    public async Task<Comment> Handle(CreateCommentRequest request
+        , CancellationToken cancellationToken)
     {
         
         var comment = new Comment(request.Content)
@@ -38,8 +41,8 @@ public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment
             Postid = request.Postid,
             Date = DateTime.UtcNow
         };
-        _db.Comment.Add(comment);
-        await _db.SaveChangesAsync(cancellationToken);
+        await _repository.CreateAsync(comment);
+        await _uow.CommitAsync(cancellationToken);
         await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
         {
             Content = comment.Content,

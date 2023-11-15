@@ -1,4 +1,5 @@
-using BuildingBlocks.Events.Comment;
+using BuildingBlocks.Core.Events.Comment;
+using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Domain.ValueObjects;
 using Infrastructure.Context;
@@ -20,12 +21,14 @@ public class CreateSubCommentRequest: IRequest<SubComment>
 }
 public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,SubComment>
 {
-    private readonly CommentDbContext _db;
+    private readonly CommentRepository _repository;
+    private readonly IUnitOfWork<CommentDbContext> _uow;
     private readonly IPublishEndpoint _endpoint;
 
-    public CreateSubCommentHandler(CommentDbContext db, IPublishEndpoint endpoint)
+    public CreateSubCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
     {
-        (_db) = (db);
+        _repository = repository;
+        _uow = uow;
         _endpoint = endpoint;
     }
 
@@ -39,8 +42,8 @@ public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,S
             Date = DateTime.UtcNow,
             ParentComment = request.ParentComment
         };
-        _db.SubComment.Add(comment);
-        await _db.SaveChangesAsync(cancellationToken);
+        await _repository.CreateAsync(comment);
+        await _uow.CommitAsync(cancellationToken);
         await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
         {
             Content = comment.Content,
