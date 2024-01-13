@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -15,7 +15,9 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="IdentityModel" Version="6.2.0" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
+      <PackageReference Include="MassTransit" Version="8.1.1" />
+      <PackageReference Include="MassTransit.Abstractions" Version="8.1.1" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
      
     </ItemGroup>
 
@@ -23,20 +25,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.AspNetCore.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.authentication.jwtbearer\7.0.10\lib\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.Authorization">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.SignalR.Core">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\7.0.9\ref\net7.0\Microsoft.AspNetCore.SignalR.Core.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+   
+    
 
 
     

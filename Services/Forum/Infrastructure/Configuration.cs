@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BuildingBlocks.Core.Repository;
+using BuildingBlocks.Healths;
+using Serilog.Core;
 
 namespace Infrastructure;
 
@@ -25,6 +27,8 @@ public static class Configuration
         services.AddTransient<PostRepository,PostRepository>();
         services.AddTransient<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
+        services.AddHealthChecks()
+            .AddCheck<SqlHealthCheck>("SqlIsReady");
         services.AddAuthorization();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>

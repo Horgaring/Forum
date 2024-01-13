@@ -1,3 +1,4 @@
+using Application.Requests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 
@@ -13,7 +14,7 @@ public class GetPostTest:  PostIntegrationTest
     [Fact]
     public async void should_get_one_post_to_db()
     {
-        var command = new Application.PostRequests.GetPostRequest()
+        var command = new GetPostRequest()
         {
             PageNum = 1,
             PageSize = 1,

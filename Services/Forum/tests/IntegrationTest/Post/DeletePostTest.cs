@@ -1,4 +1,4 @@
-using Application.PostRequests;
+using Application.Requests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Infrastructure.Seed;
@@ -16,7 +16,7 @@ public class DeletePostTest:  PostIntegrationTest
     [Fact]
     public async void should_delete_post_to_db()
     {
-        var command = new Application.PostRequests.DeletePostRequest()
+        var command = new DeletePostRequest()
         {
             id = pInitialData.Post.Id
         };

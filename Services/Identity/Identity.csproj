@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Identityserver</RootNamespace>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="6.3.2"/>
-        <PackageReference Include="FluentValidation" Version="11.7.1" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
         <PackageReference Include="MediatR" Version="12.1.1" />
 
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.0"/>

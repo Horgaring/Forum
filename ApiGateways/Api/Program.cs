@@ -4,6 +4,8 @@ using Infrastructure.Clients;
 using Infrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddCors(op => op.AddPolicy("baseCors", p =>
 {

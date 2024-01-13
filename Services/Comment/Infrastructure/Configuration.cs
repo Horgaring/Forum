@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using BuildingBlocks;
 using BuildingBlocks.Core.Repository;
 using BuildingBlocks.Extension;
+using BuildingBlocks.Healths;
 using BuildingBlocks.Middleware;
 using BuildingBlocks.TestBase;
 using Infrastructure.Bus;
@@ -27,6 +28,8 @@ public static class Configuration
         services.AddTransient<CommentRepository,CommentRepository>();
         services.AddTransient<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
+        services.AddHealthChecks()
+            .AddCheck<SqlHealthCheck>("SqlIsReady");
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>
             {

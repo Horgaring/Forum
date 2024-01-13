@@ -4,7 +4,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigetaway-deployment
+  name: api-getaway-deployment
   labels:
     app: apigetawey
 spec:
@@ -18,22 +18,19 @@ spec:
         app: apigeteway
     spec:
       containers:
-        - image: forum/apigeteway:1.0
+        - image: proxy021/forum1apigeteway:2.0
           name: apigetaway
           ports:
             - containerPort: 80
           env:
           - name: ASPNETCORE_ENVIRONMENT
             value: docker
+          - name: ASPNETCORE_CommentGrpcOption__Connection
+            value: "comment.default.svc.cluster.local:80"
+          - name: ASPNETCORE_PostGrpcOption__Connection
+            value: "post.default.svc.cluster.local:80"
           - name: ASPNETCORE_URLS
             value: http://+
-          volumeMounts:
-          - name: appsettings-volume
-            mountPath: /app/Settings
-      volumes:
-      - name: appsettings-volume
-        configMap:
-          name: appsettings
 ---
 apiVersion: v1
 kind: Service
@@ -71,7 +68,7 @@ spec:
           value: postgres
         - name: POSTGRES_USER
           value: postgres
-      image: postgres:1.0
+      image: postgres:latest
       name: postgres
       ports:
         - containerPort: 5432
@@ -110,7 +107,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:1.0
+        image: rabbitmq:latest
         ports:
         - containerPort: 5672
         env:
@@ -154,22 +151,17 @@ spec:
         app: identity
     spec:
       containers:
-        - image: forum/identity:1.0
+        - image: proxy021/forum1identity:2.0
           name: identity
           ports:
             - containerPort: 80
           env:
           - name: ASPNETCORE_ENVIRONMENT
             value: docker
+          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
           - name: ASPNETCORE_URLS
             value: http://+
-          volumeMounts:
-          - name: appsettings-volume
-            mountPath: /app/Settings
-      volumes:
-      - name: appsettings-volume
-        configMap:
-          name: appsettings
 ---
 apiVersion: v1
 kind: Service
@@ -205,22 +197,23 @@ spec:
         app: post
     spec:
       containers:
-        - image: forum/post:1.0
+        - image: proxy021/forum1post:3.0
           name: post
           ports:
             - containerPort: 80
           env:
+          - name: MessageBroker__Host
+            value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
           - name: ASPNETCORE_ENVIRONMENT
             value: docker
+          - name: MessageBroker-UserName
+            value: guest
+          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Post;Username=postgres;Password=postgres
+          - name: MessageBroker-Password
+            value: guest
           - name: ASPNETCORE_URLS
             value: http://+
-          volumeMounts:
-          - name: appsettings-volume
-            mountPath: /app/Settings
-      volumes:
-      - name: appsettings-volume
-        configMap:
-          name: appsettings
 ---
 apiVersion: v1
 kind: Service
@@ -256,22 +249,24 @@ spec:
         app: comment
     spec:
       containers:
-        - image: forum/comment:1.0
+        - image: proxy021/forum1comment:2.0
           name: comment
           ports:
             - containerPort: 80
           env:
+          - name: MessageBroker__Host
+            value: "rabbitmq-service.default.svc.cluster.local:5672"
+          - name: MessageBroker-UserName
+            value: guest
+          - name: MessageBroker-Password
+            value: guest
+          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Comment;Username=postgres;Password=postgres
           - name: ASPNETCORE_ENVIRONMENT
             value: docker
           - name: ASPNETCORE_URLS
             value: http://+
-          volumeMounts:
-          - name: appsettings-volume
-            mountPath: /app/Settings
-      volumes:
-      - name: appsettings-volume
-        configMap:
-          name: appsettings
+
 ---
 apiVersion: v1
 kind: Service
@@ -307,7 +302,7 @@ spec:
         app: notification
     spec:
       containers:
-        - image: forum/notification:1.0
+        - image: proxy021/forum1notification:2.0
           name: notification
           ports:
             - containerPort: 80
@@ -316,13 +311,14 @@ spec:
             value: docker
           - name: ASPNETCORE_URLS
             value: http://+
-          volumeMounts:
-          - name: appsettings-volume
-            mountPath: /app/Settings
-      volumes:
-      - name: appsettings-volume
-        configMap:
-          name: appsettings
+          - name: MessageBroker__Host
+            value: "rabbitmq-service.default.svc.cluster.local:5672"
+          - name: MessageBroker-UserName
+            value: guest
+          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Notification;Username=postgres;Password=postgres
+          - name: MessageBroker-Password
+            value: guest
 ---
 apiVersion: v1
 kind: Service

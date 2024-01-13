@@ -19,8 +19,8 @@ public static class BrokerConfiguration
             {
                 configurator.Host(new Uri(configuration["MessageBroker:Host"]!), h =>
                 {
-                    h.Username(configuration["MessageBroker:UserName"]);
-                    h.Password(configuration["MessageBroker:Password"]);
+                    h.Username(configuration["MessageBroker-UserName"]);
+                    h.Password(configuration["MessageBroker-Password"]);
                 });
                 
                 configurator.ConfigureEndpoints(context);

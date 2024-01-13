@@ -1,8 +1,8 @@
-using Application.PostRequests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Api;
+using Application.Requests;
 using Testcontainers.PostgreSql;
 using Xunit.Abstractions;
 
@@ -18,7 +18,7 @@ public class CreatePostTest:  PostIntegrationTest
     [Fact]
     public async void should_create_new_post_to_db()
     {
-        var command = new Application.PostRequests.CreatePostRequest()
+        var command = new CreatePostRequest()
         {
             Userid = "Test2",
             Description = "Test2",

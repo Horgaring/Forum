@@ -1,5 +1,4 @@
-using BuildingBlocks.Events;
-using BuildingBlocks.Events.Comment;
+using BuildingBlocks.Core.Events.Comment;
 using Infrastructure.Hub;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;

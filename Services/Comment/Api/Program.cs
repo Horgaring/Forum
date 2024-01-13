@@ -11,7 +11,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
+        builder.Configuration.AddEnvironmentVariables();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddInfrastructure(builder.Configuration);
@@ -24,6 +24,7 @@ public class Program
         }
         app.MapGrpcService<CommentService>();
         app.UseHttpsRedirection();
+        app.MapHealthChecks("/health");
         app.UseSeed<CommentDbContext>(app.Environment);
 
         app.MapControllers();

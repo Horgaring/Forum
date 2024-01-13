@@ -9,6 +9,7 @@ using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
+using Serilog.Core;
 
 
 public class Program
@@ -25,6 +26,7 @@ public class Program
                 .WriteTo.Console()
             );
             IdentityModelEventSource.ShowPII = true;
+            builder.Configuration.AddEnvironmentVariables();
             builder.Services.AddSwaggerGen();
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
@@ -40,8 +42,9 @@ public class Program
                 });
     
             }
-
+            
             app.UseSeed<PostDbContext>(app.Environment);
+            app.MapHealthChecks("/health");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapGrpcService<PostService>();

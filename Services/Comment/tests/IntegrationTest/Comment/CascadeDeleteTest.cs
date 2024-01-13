@@ -1,6 +1,5 @@
 using Api;
-using Application.Requests;
-using BuildingBlocks.Events;
+using BuildingBlocks.Core.Events.Post;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Infrastructure.Seed;

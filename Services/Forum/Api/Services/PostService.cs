@@ -1,4 +1,4 @@
-using Application.PostRequests;
+using Application.Requests;
 using Mapster;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
@@ -23,7 +23,7 @@ public class PostService : Post.PostBase
     public override async Task<PostResponseGrpc> CreatePost(PostRequestGrpc request, ServerCallContext context)
     {
 
-        var createpost = request.Adapt<Application.PostRequests.CreatePostRequest>();
+        var createpost = request.Adapt<CreatePostRequest>();
         createpost.Userid = context.GetHttpContext().User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value;
         createpost.Date = DateTime.UtcNow;
@@ -44,7 +44,7 @@ public class PostService : Post.PostBase
 
     public override async Task<StatusResponse> UpdatePost(PostRequestGrpc request, ServerCallContext context)
     {
-        var updatePost = request.Adapt<Application.PostRequests.UpdatePostRequest>();
+        var updatePost = request.Adapt<UpdatePostRequest>();
         updatePost.Userid = context.GetHttpContext().User.Claims
             .First(op => op.Type ==  JwtClaimTypes.Subject).Value;
         await _mediator.Send(updatePost);
@@ -53,7 +53,7 @@ public class PostService : Post.PostBase
 
     public override async Task<StatusResponse> DeletePost(DeletePostRequestGrpc request, ServerCallContext context)
     {
-        var deletepost = new Application.PostRequests.DeletePostRequest()
+        var deletepost = new DeletePostRequest()
         {
             id = Guid.Parse(request.Id)
         };

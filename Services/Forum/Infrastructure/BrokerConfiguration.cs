@@ -1,4 +1,5 @@
 using MassTransit;
+using MassTransit.RabbitMqTransport;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,15 +12,16 @@ public static class BrokerConfiguration
         services.AddMassTransit(cnf =>
         {
             cnf.SetKebabCaseEndpointNameFormatter();
+            
             cnf.UsingRabbitMq((context, configurator) =>
             {
-                configurator.Host(new Uri(configuration["MessageBroker:Host"]!), h =>
+                configurator.Host(new Uri(configuration["MessageBroker:Host"]), h =>
                 {
-                    h.Username(configuration["MessageBroker:UserName"]);
-                    h.Password(configuration["MessageBroker:Password"]);
+                    h.Username(configuration["MessageBroker-UserName"]);
+                    h.Password(configuration["MessageBroker-Password"]);
                 });
                 
-                configurator.ConfigureEndpoints(context);
+                //configurator.ConfigureEndpoints(context);
             });
         });
     }

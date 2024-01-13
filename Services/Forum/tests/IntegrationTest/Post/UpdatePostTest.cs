@@ -1,3 +1,4 @@
+using Application.Requests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Infrastructure.Seed;
@@ -14,7 +15,7 @@ public class UpdatePostTest:  PostIntegrationTest
     [Fact]
     public async void should_update_one_post_to_db()
     {
-        var command = new Application.PostRequests.UpdatePostRequest()
+        var command = new UpdatePostRequest()
         {
             Description = pInitialData.Post.Description,
             Title = pInitialData.Post.Title,
