@@ -1,0 +1,73 @@
+services:
+  apigetaway:
+    container_name: apigetaway
+    environment:
+    - ASPNETCORE_ENVIRONMENT=docker
+    - CommentGrpcOption:Connection=comment
+    - PostGrpcOption:Connection=post
+    - ASPNETCORE_URLS=http://+
+    image: forum/apigeteway:1.0
+    ports:
+    - '80'
+  rabbitmq:
+    container_name: rabbitmq
+    environment:
+    - RABBITMQ_DEFAULT_USER=guest
+    - RABBITMQ_DEFAULT_PASS=guest
+    image: rabbitmq:1.0
+    ports:
+    - '5672'
+  notification:
+    container_name: notification
+    environment:
+    - ASPNETCORE_ENVIRONMENT=docker
+    - ASPNETCORE_URLS=http://+
+    - MessageBroker-Host=5672
+    - MessageBroker-UserName=guest
+    - MessageBroker-Password=guest
+    image: forum/notification:1.0
+    ports:
+    - '80'
+  postgres:
+    container_name: postgres
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: always
+    environment:
+    - POSTGRES_PASSWORD=postgres
+    - POSTGRES_USER=postgres
+    image: postgres:1.0
+    ports:
+    - '5432'
+  comment:
+    container_name: comment
+    environment:
+    - MessageBroker-Host=5672
+    - MessageBroker-UserName=guest
+    - MessageBroker-Password=guest
+    - ASPNETCORE_ENVIRONMENT=docker
+    - ASPNETCORE_URLS=http://+
+    image: forum/comment:1.0
+    ports:
+    - '80'
+  post:
+    container_name: post
+    environment:
+    - MessageBroker-Host=5672
+    - ASPNETCORE_ENVIRONMENT=docker
+    - MessageBroker-UserName=guest
+    - MessageBroker-Password=guest
+    - ASPNETCORE_URLS=http://+
+    image: forum/post:1.0
+    ports:
+    - '80'
+  identity:
+    container_name: identity
+    environment:
+    - ASPNETCORE_ENVIRONMENT=docker
+    - ASPNETCORE_URLS=http://+
+    image: forum/identity:1.0
+    ports:
+    - '80'
+version: '3'

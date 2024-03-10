@@ -10,17 +10,40 @@ package post;
 service Post {
 
     rpc CreatePost (PostRequestGrpc) returns (PostResponseGrpc);
-    rpc DeletePost (DeletePostRequestGrpc) returns (StatusResponse);
+    rpc DeletePost (PostRequestIdGrpc) returns (StatusResponse);
     rpc UpdatePost (PostRequestGrpc) returns (StatusResponse);
     rpc GetPosts (GetPostRequestGrpc) returns (PostsResponseGrpc);
+    rpc GetGroups (GetGroupRequestGrpc) returns (GroupsResponseGrpc);
+    rpc CreateGroups (GroupRequestGrpc) returns (GroupResponseGrpc);
+    rpc DeleteGroups (GroupRequestIdGrpc) returns (StatusResponse);
+    rpc UpdateGroups (GroupRequestGrpc) returns (StatusResponse);
 }
-
+message GroupResponseGrpc {
+    string id = 1;
+    PostResponseGrpc posts = 2;
+    string AvatarPath = 3;
+}
+message GroupsResponseGrpc {
+    string id = 1;
+    repeated PostResponseGrpc posts = 2;
+    string AvatarPath = 3;
+}
+message GroupRequestIdGrpc {
+    string id = 1;
+}
+message GetGroupRequestGrpc {
+    string Name = 1;
+}
+message GroupRequestGrpc {
+    string Name = 1;
+    string AvatarPath = 2;
+}
 
 message PostRequestGrpc {
     string Title = 1;
     string Description = 2;
 }
-message DeletePostRequestGrpc {
+message PostRequestIdGrpc {
     string id = 1;
 }
 message GetPostRequestGrpc {
@@ -40,3 +63,4 @@ message PostResponseGrpc {
 message StatusResponse {
     bool succes = 1;
 }
+

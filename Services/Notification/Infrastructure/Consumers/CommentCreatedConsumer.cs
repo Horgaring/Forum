@@ -20,7 +20,7 @@ public class CommentCreatedConsumer: IConsumer<CommentCreatedEvent>
     public async Task Consume(ConsumeContext<CommentCreatedEvent> context)
     {
         _hub.Clients
-            .Group(context.Message.CustomerId)
+            .Group(context.Message.CustomerId.ToString())
             .Notify(string.Format(_format,context.Message.CustomerName,context.Message.Content));
     }
 }

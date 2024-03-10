@@ -2,6 +2,7 @@ using Api;
 using Application.Requests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
+using MediatR;
 
 namespace IntegrationTest.Comment;
 
@@ -19,7 +20,6 @@ public class GetCommentTest:  CommentIntegrationTest
         {
             ListNum = 1,
             ListSize = 1,
-            PostId = "Test"
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));

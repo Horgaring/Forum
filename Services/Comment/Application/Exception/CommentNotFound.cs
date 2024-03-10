@@ -6,7 +6,7 @@ namespace Application.Exception;
 
 public class CommentNotFound: CustomException
 {
-    public CommentNotFound(StatusCode statusCode, string[]? messages) : base(statusCode,messages, "Comment not found")
+    public CommentNotFound(string[]? messages) : base(HttpStatusCode.BadRequest,messages, "Comment not found")
     {
     }
 }

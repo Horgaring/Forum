@@ -1,22 +1,53 @@
+
+
 using BuildingBlocks.Exception;
-using Infrastructure;
-using Infrastructure.Clients;
-using Infrastructure.Options;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Yarp.ReverseProxy.Swagger;
+using Yarp.ReverseProxy.Swagger.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration.AddEnvironmentVariables();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddCors(op => op.AddPolicy("baseCors", p =>
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+try
 {
-    p.AllowAnyMethod();
-    p.AllowAnyHeader();
-    p.AllowAnyOrigin();
-}));
-var app = builder.Build();
-app.UseMiddleware<ExceptionMiddleware>();
-app.UseHttpsRedirection();
-app.UseCors("baseCors");
-app.UseAuthorization();
-
-app.Run();
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Services.AddSerilog(p => 
+        p.WriteTo.Console());
+    builder.Services.AddSingleton<ExceptionMiddleware>();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddReverseProxy()
+        .LoadFromConfig(builder.Configuration.GetSection("Yarp"))
+        .AddSwagger(builder.Configuration.GetSection("Yarp"));
+    builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+    builder.Services.AddSwaggerGen();
+    var app = builder.Build();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            var config = app.Services.GetRequiredService<IOptionsMonitor<ReverseProxyDocumentFilterConfig>>().CurrentValue;
+            foreach (var cluster in config.Clusters)
+            {
+                options.SwaggerEndpoint($"/swagger/{cluster.Key}/swagger.json", cluster.Key);
+            }
+        });
+    }
+    app.UseMiddleware<ExceptionMiddleware>();
+    app.UseSerilogRequestLogging();
+    app.MapReverseProxy();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

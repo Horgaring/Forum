@@ -1,3 +1,4 @@
+using System.Data;
 using Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,24 @@ public class PostDbContext: DbContext
     }
     public DbSet<Post> Post { get; set; }
     
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public DbSet<Group> Groups { get; set; }
+    
+    public DbSet<CustomerId> CustomersId { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnConfiguring(optionsBuilder);
+        modelBuilder.Entity<Group>()
+            .HasMany(p => p.Followers)
+            .WithMany(p => p.Groups);
+
+        
+        
+        modelBuilder.Entity<Group>()
+            .HasMany(p => p.Posts)
+            .WithOne(p => p.Group);
+        
+        modelBuilder.Entity<Group>()
+            .HasOne(p => p.Owner)
+            .WithMany(p => p.OwnGroups);
     }
+    
 }

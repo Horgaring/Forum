@@ -22,6 +22,6 @@ public class CommentDbContext: DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(typeof(Configuration).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(InfrastructureRoot).Assembly);
     }
 }

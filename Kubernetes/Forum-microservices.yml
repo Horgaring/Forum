@@ -24,11 +24,7 @@ spec:
             - containerPort: 80
           env:
           - name: ASPNETCORE_ENVIRONMENT
-            value: docker
-          - name: ASPNETCORE_CommentGrpcOption__Connection
-            value: "comment.default.svc.cluster.local:80"
-          - name: ASPNETCORE_PostGrpcOption__Connection
-            value: "post.default.svc.cluster.local:80"
+            value: Development
           - name: ASPNETCORE_URLS
             value: http://+
 ---
@@ -40,11 +36,12 @@ spec:
   selector:
     app: apigeteway
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 80
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
   type: ClusterIP
+
 ---
 # #######################################################
 # #  Postgres
@@ -132,6 +129,52 @@ spec:
 ---
 
 # #######################################################
+#   Auth
+# #######################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - image: proxy021/forum1auth:2.0
+          name: auth
+          ports:
+            - containerPort: 80
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
+          - name: ASPNETCORE_URLS
+            value: http://+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+spec:
+  selector:
+    app: auth
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+---
+# #######################################################
 #   Identity
 # #######################################################
 apiVersion: apps/v1
@@ -156,12 +199,20 @@ spec:
           ports:
             - containerPort: 80
           env:
-          - name: ASPNETCORE_ENVIRONMENT
-            value: docker
-          - name: ASPNETCORE_ConnectionStrings__DefaultConnection
-            value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
-          - name: ASPNETCORE_URLS
-            value: http://+
+            - name: "AuthServiceIp"
+              value: "http://auth.default.svc.cluster.local:80"
+            - name: MessageBroker__Host
+              value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: MessageBroker-UserName
+              value: guest
+            - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+              value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
+            - name: MessageBroker-Password
+              value: guest
+            - name: ASPNETCORE_URLS
+              value: http://+
 ---
 apiVersion: v1
 kind: Service
@@ -171,10 +222,10 @@ spec:
   selector:
     app: identity
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 80
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
   type: ClusterIP
 ---
 # #######################################################
@@ -197,15 +248,17 @@ spec:
         app: post
     spec:
       containers:
-        - image: proxy021/forum1post:3.0
+        - image: proxy021/forum1post:2.0
           name: post
           ports:
             - containerPort: 80
           env:
+          - name: "AuthServiceIp"
+            value: "http://auth.default.svc.cluster.local:80"
           - name: MessageBroker__Host
             value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
           - name: ASPNETCORE_ENVIRONMENT
-            value: docker
+            value: Development
           - name: MessageBroker-UserName
             value: guest
           - name: ASPNETCORE_ConnectionStrings__DefaultConnection
@@ -254,8 +307,10 @@ spec:
           ports:
             - containerPort: 80
           env:
+          - name: "AuthServiceIp"
+            value: "http://auth.default.svc.cluster.local:80"
           - name: MessageBroker__Host
-            value: "rabbitmq-service.default.svc.cluster.local:5672"
+            value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
           - name: MessageBroker-UserName
             value: guest
           - name: MessageBroker-Password
@@ -263,7 +318,7 @@ spec:
           - name: ASPNETCORE_ConnectionStrings__DefaultConnection
             value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Comment;Username=postgres;Password=postgres
           - name: ASPNETCORE_ENVIRONMENT
-            value: docker
+            value: Development
           - name: ASPNETCORE_URLS
             value: http://+
 
@@ -282,9 +337,9 @@ spec:
     targetPort: 80
   type: ClusterIP
 ---
-# #######################################################
-#   Notification
-# #######################################################
+ #######################################################
+ #  Notification
+ #######################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -308,11 +363,11 @@ spec:
             - containerPort: 80
           env:
           - name: ASPNETCORE_ENVIRONMENT
-            value: docker
+            value: Development
           - name: ASPNETCORE_URLS
             value: http://+
           - name: MessageBroker__Host
-            value: "rabbitmq-service.default.svc.cluster.local:5672"
+            value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
           - name: MessageBroker-UserName
             value: guest
           - name: ASPNETCORE_ConnectionStrings__DefaultConnection

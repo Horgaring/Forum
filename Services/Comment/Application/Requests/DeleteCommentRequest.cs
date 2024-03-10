@@ -30,7 +30,7 @@ public class DeleteCommentHandler : IRequestHandler<DeleteCommentRequest>
         var comment = await _repository.SingleOrDefaultAsync(comment => comment.Id == request.id);
         if (comment == null)
         {
-            throw new CommentNotFound(StatusCode.NotFound,null);
+            throw new CommentNotFound(null);
         }
         _repository.Delete(comment);
         await _uow.CommitAsync(cancellationToken);

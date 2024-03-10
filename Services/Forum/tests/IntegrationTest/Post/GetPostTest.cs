@@ -1,4 +1,5 @@
 using Application.Requests;
+using Application.Requests.Post;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 
@@ -18,7 +19,6 @@ public class GetPostTest:  PostIntegrationTest
         {
             PageNum = 1,
             PageSize = 1,
-            Query = "Test"
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));

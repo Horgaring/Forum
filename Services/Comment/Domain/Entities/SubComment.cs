@@ -5,6 +5,7 @@ public class SubComment : Comment
     public SubComment(string content) : base(content)
     {
     }
+    public SubComment() { }
     
-    public int ParentComment { get; set; }
+    public Guid ParentComment { get; set; }
 }

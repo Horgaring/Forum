@@ -45,7 +45,8 @@ public static class ConfigurationExtensions
     {
         using var scope = app.ApplicationServices.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TContext>();
-        db.Database.MigrateAsync().GetAwaiter().GetResult();
+        Log.Information("Migrate Start");
+        db.Database.Migrate();
         if (env.IsEnvironment("test"))
         {
             

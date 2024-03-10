@@ -1,6 +1,6 @@
 using BuildingBlocks;
 using BuildingBlocks.Core.Repository;
-using BuildingBlocks.Middleware;
+
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using IntegrationTest.Seed;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BuildingBlocks.Core.Repository;
 using BuildingBlocks.Healths;
+using Microsoft.Extensions.Hosting;
 using Serilog.Core;
 
 namespace Infrastructure;
@@ -18,14 +19,16 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
+        
         services.AddBroker(config);
         services.AddScoped<IDataSeeder, PostDataSeeder>();
-        services.AddGrpc(option => option.Interceptors.Add<Exceptioninterceptor>());
         services.AddDbContext<PostDbContext>(op =>
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api")));
         services.AddTransient<PostRepository,PostRepository>();
-        services.AddTransient<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
+        services.AddTransient<GroupRepository,GroupRepository>();
+        services.AddTransient<CustomerIdRepository,CustomerIdRepository>();
+        services.AddScoped<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddHealthChecks()
             .AddCheck<SqlHealthCheck>("SqlIsReady");
@@ -34,12 +37,17 @@ public static class Configuration
             .AddJwtBearer("Bearer", op =>
             {
                 //op.Configuration = new OpenIdConnectConfiguration(); 
-                op.RequireHttpsMetadata = false;
-                op.Authority = "https://localhost:5001";
-                op.TokenValidationParameters = new()
+                if (config["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
                 {
-                    ValidateAudience = false
-                };
+                    op.RequireHttpsMetadata = false;
+                    op.TokenValidationParameters = new()
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false
+                    };
+                    
+                }
+                op.Authority = config["AuthServiceIp"];
                 
             });
         return services;

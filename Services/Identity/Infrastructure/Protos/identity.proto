@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService1";
+
+import "google/protobuf/timestamp.proto";
+
+package post;
+
+
+service Post {
+
+    rpc GetActivity (GetActivityRequestGrpc) returns (ActivityResponseGrpc);
+    
+}
+
+
+message GetActivityRequestGrpc {
+    Date DateFrom = 1;
+    Date DateTo = 2;
+}
+message ActivityResponseGrpc {
+    repeated ActivityDto ActivityDtos = 1;
+}
+message ActivityDto{
+    Date date =1;
+    int32 value = 2;
+}
+message Date{
+    int32 Day = 1;
+    int32 Month = 2;
+    int32 Years = 3;
+}
+

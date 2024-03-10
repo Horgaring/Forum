@@ -15,7 +15,7 @@ public class cInitialData
             Comment comment = new Comment("Test")
             {
                 Id = _id,
-                Date = _date,
+                CreatedAt = _date,
                 Postid = _postid
             };
             return comment;

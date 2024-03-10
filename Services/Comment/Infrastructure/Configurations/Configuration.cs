@@ -1,0 +1,63 @@
+using System.Collections.Immutable;
+using BuildingBlocks;
+using BuildingBlocks.Core.Repository;
+using BuildingBlocks.Extension;
+using BuildingBlocks.Healths;
+using BuildingBlocks.TestBase;
+using Domain.Entities;
+using FluentValidation;
+using Infrastructure.Bus;
+using Infrastructure.Context;
+using Infrastructure.Seed;
+using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Infrastructure.Configurations;
+
+public static class Configuration
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddBroker(configuration);
+        services.AddScoped<IDataSeeder, CommentDataSeeder>();
+        services.AddDbContext<CommentDbContext>(op =>
+            op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")
+                ,b => b.MigrationsAssembly("Api")));
+        services.AddTransient<CommentRepository,CommentRepository>();
+        services.AddTransient<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
+        services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
+        services.AddHealthChecks()
+            .AddCheck<SqlHealthCheck>("SqlIsReady");
+        services.AddAuthorization();
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer("Bearer", op =>
+            {
+                if (configuration["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
+                {
+                    op.RequireHttpsMetadata = false;
+                    op.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        //ValidateAudience = false
+                        
+                    };
+                }
+                //http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
+                op.MapInboundClaims = false;
+                op.Audience = "user";
+                op.Authority = configuration["AuthServiceIp"];
+                
+            });
+        return services;
+    }
+    
+    
+
+    
+    
+}

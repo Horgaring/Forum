@@ -1,8 +1,11 @@
+using System.Security.Cryptography.X509Certificates;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Api;
 using Application.Requests;
+using Application.Requests.Post;
+using Domain.Entities;
 using Testcontainers.PostgreSql;
 using Xunit.Abstractions;
 
@@ -20,10 +23,9 @@ public class CreatePostTest:  PostIntegrationTest
     {
         var command = new CreatePostRequest()
         {
-            Userid = "Test2",
+            Userid = new CustomerId(){Id = Guid.NewGuid()},
             Description = "Test2",
             Title = "Test2",
-            Date = DateTime.UtcNow
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));

@@ -1,7 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Domain.ValueObjects;
 
+[Owned]
 public class CustomerInfo
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
+    public Guid Id { get; set; }
+    
 }

@@ -13,6 +13,6 @@ public class CommentRepository : Repository<Comment,Guid,CommentDbContext>
 
     public async Task<Comment> SingleOrDefaultAsync(Expression<Func<Comment, bool>> func)
     {
-        return await _db.Comment.SingleOrDefaultAsync(func);
+        return await Db.Comment.SingleOrDefaultAsync(func);
     }
 }

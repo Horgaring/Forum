@@ -15,13 +15,13 @@ public static class BrokerConfiguration
             
             cnf.UsingRabbitMq((context, configurator) =>
             {
-                configurator.Host(new Uri(configuration["MessageBroker:Host"]), h =>
-                {
-                    h.Username(configuration["MessageBroker-UserName"]);
-                    h.Password(configuration["MessageBroker-Password"]);
-                });
+                 configurator.Host(new Uri(configuration["MessageBroker:Host"]), h =>
+                 {
+                     h.Username(configuration["MessageBroker-UserName"]);
+                     h.Password(configuration["MessageBroker-Password"]);
+                 });
                 
-                //configurator.ConfigureEndpoints(context);
+                configurator.ConfigureEndpoints(context);
             });
         });
     }

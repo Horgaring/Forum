@@ -1,3 +1,4 @@
+using Application.Exception;
 using BuildingBlocks.Core.Events.Comment;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
@@ -8,16 +9,23 @@ using MediatR;
 
 namespace Application.Requests;
 
-public class CreateSubCommentRequest: IRequest<SubComment>
+public class CreateSubCommentRequest:  IRequest<SubComment>
 {
+    public CreateSubCommentRequest(string content, CustomerInfo customerInfo)
+    {
+        Content = content;
+        CustomerInfo = customerInfo;
+    }
+    public CreateSubCommentRequest() { }
     public CreateSubCommentRequest(string content)
     {
         Content = content;
     }
     public Guid Postid { get; set; }
     public string Content { get; init; }
-    public int ParentComment { get; set; }
-    public CustomerInfo customerInfo { get; set; }
+    public CustomerInfo CustomerInfo { get; set; }
+    public Guid ParentComment { get; set; }
+    
 }
 public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,SubComment>
 {
@@ -39,17 +47,23 @@ public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,S
         var comment = new SubComment(request.Content)
         {
             Postid = request.Postid,
-            Date = DateTime.UtcNow,
-            ParentComment = request.ParentComment
+            CreatedAt = DateTime.UtcNow,
+            LastUpdate = DateTime.UtcNow,
+            ParentComment = request.ParentComment,
+            CustomerInfo = request.CustomerInfo,
+            
         };
+
+        if (await _repository.GetByIdAsync(comment.ParentComment) == null) 
+            throw new CommentNotFound(new []{"Parent Comment Id is Invalid"});
+            
         await _repository.CreateAsync(comment);
         await _uow.CommitAsync(cancellationToken);
         await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
         {
             Content = comment.Content,
-            CustomerId = request.customerInfo.Id,
-            CustomerName = request.customerInfo.Name,
-            Date = comment.Date,
+            CustomerId = request.CustomerInfo.Id,
+            Date = comment.CreatedAt,
             PostId = comment.Postid
         }, cancellationToken);
         return comment;

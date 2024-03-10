@@ -1,4 +1,5 @@
 using Application.Requests;
+using Application.Requests.Post;
 using FluentValidation;
 
 namespace Application.Validations;

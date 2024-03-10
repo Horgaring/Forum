@@ -1,21 +1,21 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ApiGateways/Api/Api.csproj", "ApiGateways/Api/"]
-COPY ["ApiGateways/Infrastructure/Infrastructure.csproj", "ApiGateways/Infrastructure/"]
-COPY ["ApiGateways/Application/Application.csproj", "ApiGateways/Application/"]
-COPY ["BuildingBlocks/BuildingBlocks.csproj", "BuildingBlocks/"]
 RUN dotnet restore "ApiGateways/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/ApiGateways/Api"
-RUN dotnet build "Api.csproj" -c Release -o /app/build
+RUN dotnet build "Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

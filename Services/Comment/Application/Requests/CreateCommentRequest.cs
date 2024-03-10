@@ -11,13 +11,19 @@ namespace Application.Requests;
 
 public class CreateCommentRequest: IRequest<Comment>
 {
+    public CreateCommentRequest(string content, CustomerInfo customerInfo)
+    {
+        Content = content;
+        CustomerInfo = customerInfo;
+    }
+    public CreateCommentRequest() { }
     public CreateCommentRequest(string content)
     {
         Content = content;
     }
     public Guid Postid { get; set; }
     public string Content { get; init; }
-    public CustomerInfo customerInfo { get; set; }
+    public CustomerInfo CustomerInfo { get; set; }
 }
 public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment>
 {
@@ -39,16 +45,18 @@ public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment
         var comment = new Comment(request.Content)
         {
             Postid = request.Postid,
-            Date = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CustomerInfo = request.CustomerInfo,
+            LastUpdate = DateTime.UtcNow,
+            
         };
         await _repository.CreateAsync(comment);
         await _uow.CommitAsync(cancellationToken);
         await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
         {
             Content = comment.Content,
-            CustomerId = request.customerInfo.Id,
-            CustomerName = request.customerInfo.Name,
-            Date = comment.Date,
+            CustomerId = request.CustomerInfo.Id,
+            Date = comment.CreatedAt,
             PostId = comment.Postid
         }, cancellationToken);
         return comment;

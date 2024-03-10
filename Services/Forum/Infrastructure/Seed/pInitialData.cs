@@ -6,7 +6,7 @@ namespace Infrastructure.Seed;
 public static class pInitialData
 {
     private readonly static Guid _id = Guid.NewGuid();
-    public static Post Post
+    public static Post? Post
     {
         get
         {
@@ -14,8 +14,8 @@ public static class pInitialData
             var post = new Post();
             post.Id = _id;
             post.Description = "Test";
-            post.Date = DateTime.UtcNow;
-            post.Userid = "Test";
+            post.CreatedAt = DateTime.UtcNow;
+            post.Userid.Id = _id;
             post.Title = "Test";
             return post;
         }

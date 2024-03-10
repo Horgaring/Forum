@@ -18,7 +18,7 @@ public class PostGrpcService
        var resp = await _client.CreatePostAsync(request);
        return resp;
     }
-    public async Task<bool> RemovePostAsync(DeletePostRequestGrpc request)
+    public async Task<bool> RemovePostAsync(PostRequestIdGrpc request)
     {
        var code = await _client.DeletePostAsync(request);
        if (code == null) return false;

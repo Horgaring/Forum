@@ -1,4 +1,5 @@
 using Application.Requests;
+using Application.Requests.Post;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
 using Infrastructure.Seed;
