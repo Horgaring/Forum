@@ -20,6 +20,11 @@ try
         p.WriteTo.Console());
     builder.Services.AddSingleton<ExceptionMiddleware>();
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
     builder.Services.AddReverseProxy()
         .LoadFromConfig(builder.Configuration.GetSection("Yarp"))
         .AddSwagger(builder.Configuration.GetSection("Yarp"));
@@ -39,6 +44,7 @@ try
         });
     }
     app.UseMiddleware<ExceptionMiddleware>();
+    app.UseForwardedHeaders();
     app.UseSerilogRequestLogging();
     app.MapReverseProxy();
     app.Run();

@@ -153,8 +153,14 @@ spec:
           ports:
             - containerPort: 80
           env:
+          - name: MessageBroker__Host
+            value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
           - name: ASPNETCORE_ENVIRONMENT
             value: Development
+          - name: MessageBroker-UserName
+            value: guest
+          - name: MessageBroker-Password
+            value: guest
           - name: ASPNETCORE_ConnectionStrings__DefaultConnection
             value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
           - name: ASPNETCORE_URLS
@@ -311,9 +317,9 @@ spec:
             value: "http://auth.default.svc.cluster.local:80"
           - name: MessageBroker__Host
             value: "amqp://rabbitmq-service.default.svc.cluster.local:5672"
-          - name: MessageBroker-UserName
+          - name: MessageBroker__UserName
             value: guest
-          - name: MessageBroker-Password
+          - name: MessageBroker__Password
             value: guest
           - name: ASPNETCORE_ConnectionStrings__DefaultConnection
             value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Comment;Username=postgres;Password=postgres
