@@ -17,19 +17,9 @@ public class PostDbContext: DbContext
     public DbSet<CustomerId> CustomersId { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Group>()
-            .HasMany(p => p.Followers)
-            .WithMany(p => p.Groups);
-
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(InfrastructureRoot).Assembly);
         
         
-        modelBuilder.Entity<Group>()
-            .HasMany(p => p.Posts)
-            .WithOne(p => p.Group);
-        
-        modelBuilder.Entity<Group>()
-            .HasOne(p => p.Owner)
-            .WithMany(p => p.OwnGroups);
     }
     
 }

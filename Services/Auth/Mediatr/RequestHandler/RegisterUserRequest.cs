@@ -1,11 +1,14 @@
 using System.Net;
+using BuildingBlocks.Core.Events;
 using Duende.IdentityServer.Models;
 using FluentValidation;
 using Identityserver.Exceptions;
 using Identityserver.Models;
 using Identityserver.Services;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 namespace Identityserver.Mediatr.RequestHandler;
 
@@ -22,9 +25,14 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserRequest>
     
     private readonly UserManager<User> _userManager;
     private readonly IImageService _image;
+    
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public RegisterUserHandler(UserManager<User> userm,IImageService image)=>
-        (_userManager,_image) = (userm,image);
+    public RegisterUserHandler(UserManager<User> userm,IImageService image, IPublishEndpoint publishEndpoint)
+    {
+        _publishEndpoint = publishEndpoint;
+        (_userManager, _image) = (userm, image);
+    }
 
 
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
@@ -43,7 +51,16 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserRequest>
                 HttpStatusCode.BadRequest,
                 identityResult.Errors.Select(op => op.Description).ToArray());
         }
-        var userid =  (await _userManager.FindByEmailAsync(user.Email)).Id;
+        var userid =  (await _userManager.FindByEmailAsync(user.Email))?.Id;
+        if (userid != null)
+        {
+            Log.Information("Publish UserCreateEvent for {@UserEmail} with id is {@UserID}",
+                user.Email,
+                user.Id);
+            
+            await _publishEndpoint.Publish<UserCreatedEvent>(new UserCreatedEvent(user.UserName,Guid.Parse(user.Id)));
+            
+        }
         _image.SaveImage(request.File,userid);
     }
 }

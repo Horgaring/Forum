@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace Application.DTOs.Group;
 
 public class GetGroupRequestDto()
 {
-    public Guid Id { get; set; }
+    [FromQuery]
+    public string Name { get; set; }
 }

@@ -13,7 +13,7 @@ public class UpdatePostRequest : IRequest
 {
     public Guid Id { get; set; }
     public Guid GroupId { get; set; }
-    public CustomerId Userid { get; set; }
+    public CustomerId User { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }
 }
@@ -28,9 +28,8 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
 
     public async Task Handle(UpdatePostRequest request, CancellationToken cancellationToken)
     {
-       var post  = await _repository.SingleOrDefaultAsync(op => op.Userid == request.Userid
-                                                 && op.Id == request.Id 
-                                                 && op.Group.Id == request.GroupId);
+       var post  = await _repository.SingleOrDefaultAsync(op => op.Id == request.Id);
+       
        if (post is null)
        {
            throw new PostNotFountException(null);

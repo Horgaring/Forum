@@ -37,8 +37,4 @@
       <PackageReference Include="xunit.abstractions" Version="2.0.3" />
       <PackageReference Include="xunit.core" Version="2.5.3" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Core\" />
-    </ItemGroup>
 </Project>

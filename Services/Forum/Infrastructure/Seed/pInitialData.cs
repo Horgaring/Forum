@@ -15,7 +15,7 @@ public static class pInitialData
             post.Id = _id;
             post.Description = "Test";
             post.CreatedAt = DateTime.UtcNow;
-            post.Userid.Id = _id;
+            post.User.Id = _id;
             post.Title = "Test";
             return post;
         }

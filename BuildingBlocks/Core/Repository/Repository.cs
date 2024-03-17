@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using BuildingBlocks.Core.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,7 +6,7 @@ namespace BuildingBlocks.Core.Repository;
 
 public  class Repository<T,TId,TContext> : IRepository<T,TId> where T : Entity<TId> where TContext : DbContext
 {
-    protected readonly TContext Db;
+    public readonly TContext Db;
 
     public DbSet<T> Table { get => Db.Set<T>(); }
 
@@ -33,5 +34,10 @@ public  class Repository<T,TId,TContext> : IRepository<T,TId> where T : Entity<T
     public virtual void Delete(T entity)
     {
         Db.Set<T>().Remove(entity);
+    }
+
+    public IQueryable<T> Where(Expression<Func<T, bool>> entity)
+    {
+        return Db.Set<T>().Where(entity);
     }
 }

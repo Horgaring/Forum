@@ -20,7 +20,7 @@ public class UpdatePostTest:  PostIntegrationTest
         {
             Description = pInitialData.Post.Description,
             Title = pInitialData.Post.Title,
-            Userid = pInitialData.Post.Userid
+            User = pInitialData.Post.User
         };
         
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));

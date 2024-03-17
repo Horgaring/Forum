@@ -6,7 +6,7 @@ public class Group : Entity<Guid>
 {
     public string Name { get; set; }
     
-    public string AvatarPath { get; set; }
+    public byte[] AvatarPath { get; set; }
     
     public CustomerId Owner { get; set; }
     

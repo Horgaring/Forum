@@ -13,7 +13,7 @@ namespace Application.Requests.Post;
 
 public class DeletePostRequest : IRequest<bool>
 {
-    public CustomerId Userid { get; set; }
+    public CustomerId User { get; set; }
     public Guid id { get; set; }
 }
 
@@ -36,9 +36,9 @@ public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
             throw new PostNotFountException(null);
         }
 
-        if (request.Userid != post.Userid)
+        if (request.User != post.User)
         {
-            throw new PermissionDenied(new[]{"User is not owner"});
+            throw new PermissionDenied(new[]{"User is not have this post"});
         }
         
         _repository.Delete(post);

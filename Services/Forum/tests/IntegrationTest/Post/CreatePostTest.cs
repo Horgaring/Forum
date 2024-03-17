@@ -23,7 +23,7 @@ public class CreatePostTest:  PostIntegrationTest
     {
         var command = new CreatePostRequest()
         {
-            Userid = new CustomerId(){Id = Guid.NewGuid()},
+            User = new CustomerId(){Id = Guid.NewGuid()},
             Description = "Test2",
             Title = "Test2",
         };

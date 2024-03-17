@@ -49,7 +49,7 @@ public class UpdateGroupRequestHandler : IRequestHandler<UpdateGroupRequest>
         using (MemoryStream fs = new())
         {
             request.Avatar.CopyTo(fs);
-            //group.AvatarPath = fs.ToArray();
+            group.AvatarPath = fs.ToArray();
         }
         
         _repository.Update(group);

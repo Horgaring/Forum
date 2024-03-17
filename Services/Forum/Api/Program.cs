@@ -22,30 +22,45 @@ public class Program
         try{
             Log.Information("Starting web host");
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog((cbx,lc) =>lc
-                .WriteTo.Console()
-            );
-            IdentityModelEventSource.ShowPII = true;
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
+            builder.Host.UseSerilog((cbx,lc) =>lc
+                .WriteTo.Console()
+            );
             builder.Configuration.AddEnvironmentVariables();
             builder.Services.AddSingleton<ExceptionMiddleware>();
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(p =>
             {
+                //p.MapType(typeof(IFormFile), () => new OpenApiSchema() { Type = "file", Format = "binary" });
                 p.SwaggerDoc("post", new OpenApiInfo() { Version = "post", Title = "post" });
                 p.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter token",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
+                    In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
-                    BearerFormat = "JWT",
-                    Scheme = "bearer"
+                    Scheme = "Bearer"
+                });
+                p.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,},
+                        new List<string>()
+                    }
                 });
             });
             builder.Services.AddApplication();
@@ -65,7 +80,7 @@ public class Program
             app.UseMiddleware<ExceptionMiddleware>();
             app.MapEnpoints();
             app.UseSeed<PostDbContext>(app.Environment);
-            app.MapHealthChecks("/health");
+            //app.MapHealthChecks("/health");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();

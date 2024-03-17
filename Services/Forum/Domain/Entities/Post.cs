@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class Post : Entity<Guid>
 {
-    public CustomerId Userid { get; set; }
+    public CustomerId User { get; set; }
     
     public string Title { get; set; }
     

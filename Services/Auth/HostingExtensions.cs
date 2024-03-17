@@ -20,6 +20,7 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
+        builder.Services.AddBroker(builder.Configuration);
         builder.Services.AddCors(option =>
         {
             option.AddDefaultPolicy(policy =>

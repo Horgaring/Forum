@@ -1,4 +1,4 @@
-using BuildingBlocks.Extension;
+
 using Infrastructure.BUS;
 
 using Microsoft.AspNetCore.Builder;

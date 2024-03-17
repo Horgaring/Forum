@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BuildingBlocks.Core.Repository;
 using BuildingBlocks.Healths;
+using Infrastructure.BUS;
 using Microsoft.Extensions.Hosting;
 using Serilog.Core;
 
@@ -20,7 +21,6 @@ public static class Configuration
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         
-        services.AddBroker(config);
         services.AddScoped<IDataSeeder, PostDataSeeder>();
         services.AddDbContext<PostDbContext>(op =>
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
@@ -30,15 +30,17 @@ public static class Configuration
         services.AddTransient<CustomerIdRepository,CustomerIdRepository>();
         services.AddScoped<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
+        services.AddBroker(config);
         services.AddHealthChecks()
             .AddCheck<SqlHealthCheck>("SqlIsReady");
         services.AddAuthorization();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer("Bearer", op =>
+            .AddJwtBearer(  "Bearer", op =>
             {
                 //op.Configuration = new OpenIdConnectConfiguration(); 
                 if (config["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
                 {
+                    
                     op.RequireHttpsMetadata = false;
                     op.TokenValidationParameters = new()
                     {
@@ -47,6 +49,8 @@ public static class Configuration
                     };
                     
                 }
+
+                op.MapInboundClaims = false;
                 op.Authority = config["AuthServiceIp"];
                 
             });

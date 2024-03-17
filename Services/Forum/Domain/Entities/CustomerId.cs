@@ -4,12 +4,18 @@ namespace Domain.Entities;
 
 public class CustomerId : Entity<Guid>
 {
-    public CustomerId(string id)
+    public CustomerId(Guid id, string name)
     {
-        Id = Guid.Parse(id);
+        Name = name;
+        Id = id;
     }
-    public CustomerId(){}
+    public CustomerId()
+    {
+    }
     
+    public string Name { get; set; }
     public IEnumerable<Group>? Groups { get; set; }
     public IEnumerable<Group>? OwnGroups { get; set; }
+    
+    public List<Post> Posts { get; set; }
 }

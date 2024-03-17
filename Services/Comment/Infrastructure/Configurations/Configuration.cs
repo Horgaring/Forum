@@ -23,14 +23,14 @@ public static class Configuration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddBroker(configuration);
         services.AddScoped<IDataSeeder, CommentDataSeeder>();
         services.AddDbContext<CommentDbContext>(op =>
             op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api")));
-        services.AddTransient<CommentRepository,CommentRepository>();
-        services.AddTransient<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
+        services.AddScoped<CommentRepository,CommentRepository>();
+        services.AddScoped<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
+        services.AddBroker(configuration);
         services.AddHealthChecks()
             .AddCheck<SqlHealthCheck>("SqlIsReady");
         services.AddAuthorization();
