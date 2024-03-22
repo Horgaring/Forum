@@ -1,5 +1,6 @@
 using Application.Mapster;
 using Application.Requests;
+using Application.Requests.Group;
 using Application.Requests.Post;
 using Application.Validations;
 using BuildingBlocks.Validation;
@@ -16,6 +17,7 @@ public static class Configuration
     {
         service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreatePostRequest).Assembly));
         service.AddScoped<IValidator<CreatePostRequest>, CreatePostRequestValidator>();
+        service.AddScoped<IValidator<GetGroupsRequest>, GetGroupsRequestValidator>();
         service.AddScoped<IValidator<GetPostRequest>, GetPostRequestValidator>();
         service.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         service.RegisterMapsterConfiguration();

@@ -5,6 +5,7 @@ using BuildingBlocks.Extension;
 using Infrastructure.Configurations;
 using Infrastructure.Context;
 using Mapster;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Logging;

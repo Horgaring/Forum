@@ -41,6 +41,9 @@ public static class RouteExtension
         app.MapPost("api/groups", CreateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
+        app.MapGet("api/groups/{Id:guid}", GetGroup)
+            .RequireAuthorization()
+            .DisableAntiforgery();
         app.MapPut("api/groups", UpdateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
@@ -114,10 +117,19 @@ public static class RouteExtension
     }
     
     private static async Task<IResult> GetGroups(HttpContext context,
-        [AsParameters] GetGroupRequestDto dto,
+        [AsParameters] GetGroupsRequestDto dto,
         [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<GetGroupsRequest>();
+        var res = await mediator.Send(req);
+        return Results.Json(res);
+    }
+    
+    private static async Task<IResult> GetGroup(HttpContext context,
+        [AsParameters] GetGroupRequestDto dto,
+        [FromServices] IMediator mediator)
+    {
+        var req = dto.Adapt<GetGroupRequest>();
         var res = await mediator.Send(req);
         return Results.Json(res);
     }
