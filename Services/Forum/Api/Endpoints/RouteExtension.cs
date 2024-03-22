@@ -24,29 +24,29 @@ public static class RouteExtension
 
     private static void UsePostEndpoints(this WebApplication app)
     {
-        app.MapGet("api/post", GetPosts)
+        app.MapGet("api/posts", GetPosts)
             .AllowAnonymous();
-        app.MapPost("api/post", CreatePost)
+        app.MapPost("api/posts", CreatePost)
             .ProducesProblem(400)
             .RequireAuthorization();
-        app.MapDelete("api/post", DeletePost)
+        app.MapDelete("api/posts", DeletePost)
             .RequireAuthorization();
-        app.MapPut("api/post", UpdatePost)
+        app.MapPut("api/posts", UpdatePost)
             .RequireAuthorization();
     }
     
     public static void UseGroupEndpoints(this WebApplication app)
     {
-        app.MapGet("api/group/", GetGroup);
-        app.MapPost("api/group", CreateGroup)
+        app.MapGet("api/groups", GetGroups);
+        app.MapPost("api/groups", CreateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
-        app.MapPut("api/group", UpdateGroup)
+        app.MapPut("api/groups", UpdateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
-        app.MapPost("api/group/leave", LeaveFromGroup)
+        app.MapPost("api/groups/leave", LeaveFromGroup)
             .RequireAuthorization();
-        app.MapPost("api/group/join", JoinInGroup)
+        app.MapPost("api/groups/join", JoinInGroup)
             .RequireAuthorization();
     }
 
@@ -113,11 +113,11 @@ public static class RouteExtension
         return Results.Ok();
     }
     
-    private static async Task<IResult> GetGroup(HttpContext context,
+    private static async Task<IResult> GetGroups(HttpContext context,
         [AsParameters] GetGroupRequestDto dto,
         [FromServices] IMediator mediator)
     {
-        var req = dto.Adapt<GetGroupRequest>();
+        var req = dto.Adapt<GetGroupsRequest>();
         var res = await mediator.Send(req);
         return Results.Json(res);
     }

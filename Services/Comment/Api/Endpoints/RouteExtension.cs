@@ -15,35 +15,35 @@ public static class RouteExtension
 {
     public static void MapEnpoints(this WebApplication app)
     {
-        app.MapGroup("api/comment")
+        app.MapGroup("api/")
             .RequireAuthorization()
             .UseCommentEndpoints();
     }
     public static void UseCommentEndpoints(this RouteGroupBuilder app)
     {
-        app.MapGet("api/comment", GetComments)
+        app.MapGet("comments", GetComments)
             .WithDescription("Get comments")
             .ProducesProblem(400)
             .Produces((int)HttpStatusCode.OK)
             .AllowAnonymous();
-        app.MapGet("api/subcomment", GetSubComments)
+        app.MapGet("subcommenst", GetSubComments)
             .WithDescription("Get subcomments")
             .ProducesProblem(400)
             .Produces((int)HttpStatusCode.OK)
             .AllowAnonymous();
-        app.MapPost("api/comment", CreateComment)
+        app.MapPost("comments", CreateComment)
             .ProducesProblem(401)
             .ProducesProblem(400)
             .Produces((int)HttpStatusCode.Created);
-        app.MapPost("api/subcomment", CreateSubComment)
+        app.MapPost("subcomments", CreateSubComment)
             .Produces((int)HttpStatusCode.Created)
             .ProducesProblem(401)
             .ProducesProblem(400);;
-        app.MapDelete("api/comment", DeleteComment)
+        app.MapDelete("comments", DeleteComment)
             .ProducesProblem(401)
             .ProducesProblem(400)
             .Produces((int)HttpStatusCode.OK);;
-        app.MapPut("api/comment", UpdateComment)
+        app.MapPut("comments", UpdateComment)
             .ProducesProblem(401)
             .ProducesProblem(400)
             .Produces((int)HttpStatusCode.OK);
