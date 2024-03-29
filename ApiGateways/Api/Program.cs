@@ -1,5 +1,3 @@
-
-
 using BuildingBlocks.Exception;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;

@@ -27,6 +27,7 @@ try
     builder.Host.UseSerilog((cbx,lc) =>lc
         .WriteTo.Console()
     );
+    builder.Services.AddSingleton<ExceptionMiddleware>();
     builder.Services.AddInfrastructure(builder.Configuration);
 
     builder.Services.AddSwaggerGen(p =>

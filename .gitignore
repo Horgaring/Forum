@@ -3,3 +3,16 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea/.idea.PostApp/.idea/.gitignore
+.idea/.idea.PostApp/.idea/.name
+.idea/.idea.PostApp/.idea/dataSources.xml
+.idea/.idea.PostApp/.idea/encodings.xml
+.idea/.idea.PostApp/.idea/indexLayout.xml
+.idea/.idea.PostApp/.idea/vcs.xml
+.idea/.idea.PostApp/.idea/inspectionProfiles/Project_Default.xml
+.idea/.idea.Shop/.idea/.gitignore
+.idea/.idea.Shop/.idea/dataSources.xml
+.idea/.idea.Shop/.idea/encodings.xml
+.idea/.idea.Shop/.idea/indexLayout.xml
+.idea/.idea.Shop/.idea/sqldialects.xml
+.idea/.idea.Shop/.idea/vcs.xml

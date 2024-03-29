@@ -15,14 +15,6 @@ Log.Information("Starting up");
     try
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            options.RequireHeaderSymmetry = false;
-            options.KnownNetworks.Clear();
-            options.KnownProxies.Clear();
-        });
         builder.Host.UseSerilog((ctx, lc) => lc
             .WriteTo.Console(
                 outputTemplate:

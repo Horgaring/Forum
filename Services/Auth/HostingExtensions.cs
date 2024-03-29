@@ -11,6 +11,7 @@ using Identityserver.Exceptions;
 using Identityserver.Models;
 using Identityserver.Models.Store;
 using Identityserver.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 
 
 namespace Identity;
@@ -21,6 +22,14 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
         builder.Services.AddBroker(builder.Configuration);
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.RequireHeaderSymmetry = false;
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
         builder.Services.AddCors(option =>
         {
             option.AddDefaultPolicy(policy =>
@@ -92,13 +101,12 @@ internal static class HostingExtensions
             await func.Invoke(context);
         });
         app.UseMiddleware<ExceptionMiddleware>();
-        
+        app.UseForwardedHeaders();                  
         app.UseCors();
         app.UseStaticFiles();
         app.UseIdentityServer();
         app.UseAuthorization();
         app.MapControllers();
-        
         app.MapRazorPages()
             .RequireAuthorization();
         app.UseSerilogRequestLogging();
