@@ -34,7 +34,7 @@ public static class ConfigurationExtensions
         return model;
     }
 
-    public static new void AddOption<TModel>(this IServiceCollection service) where TModel : class, new()
+    public static void AddOption<TModel>(this IServiceCollection service) where TModel : class, new()
     {
         service.AddOptions<TModel>();
         service.AddSingleton(x => x.GetRequiredService<IOptions<TModel>>().Value);

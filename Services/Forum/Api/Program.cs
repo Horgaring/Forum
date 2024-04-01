@@ -64,8 +64,6 @@ public class Program
                 });
             });
             builder.Services.AddApplication();
-            // builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions
-            //     .ReferenceHandler = ReferenceHandler.Preserve); 
             var app = builder.Build();
             if (app.Environment.IsDevelopment())
             {
@@ -80,7 +78,7 @@ public class Program
             app.UseMiddleware<ExceptionMiddleware>();
             app.MapEnpoints();
             app.UseSeed<PostDbContext>(app.Environment);
-            //app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health");
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();

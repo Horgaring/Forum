@@ -1,7 +1,7 @@
 using Application.DTOs.Common;
 using Application.DTOs.Group;
 using Application.Exceptions.Group;
-using Infrastructure.Context;
+using Infrastructure.Context.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

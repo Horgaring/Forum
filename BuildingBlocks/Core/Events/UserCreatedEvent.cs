@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Core.Events;
 
-public class UserCreatedEvent
+public class UserCreatedEvent: DomainEvent
 {
     public UserCreatedEvent(string name, Guid id)
     {

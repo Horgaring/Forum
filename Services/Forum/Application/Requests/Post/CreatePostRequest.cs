@@ -6,6 +6,7 @@ using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Grpc.Core;
 using Infrastructure.Context;
+using Infrastructure.Context.Repository;
 using Mapster;
 using MassTransit;
 using MediatR;
@@ -49,10 +50,11 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest,Domain.Entiti
         var req = await _grouprepository.Where(p => p.Id == request.GroupId)
             .FirstOrDefaultAsync() ?? throw new GroupNotFoundExeption();
         postentity.Group = req;
+        postentity.RaiseEvent(postentity.Adapt<CreatedPostEvent>());
         
         await _repository.CreateAsync(postentity);
         await _uow.CommitAsync();
-        await _publishEndpoint.Publish<CreatedPostEvent>(postentity.Adapt<CreatedPostEvent>());
+        
         return postentity;
     }
 }

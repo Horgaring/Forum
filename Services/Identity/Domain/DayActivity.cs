@@ -1,10 +1,11 @@
+using BuildingBlocks;
 using BuildingBlocks.Core.Model;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain;
 
-public class DayActivity : Entity<Guid>
+public class DayActivity : AggregateRoot<Guid>
 {
     public DateOnly Date { get; set; }
     public int Activity { get; set; }

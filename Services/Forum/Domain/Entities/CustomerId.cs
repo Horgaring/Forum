@@ -1,8 +1,9 @@
+using BuildingBlocks;
 using BuildingBlocks.Core.Model;
 
 namespace Domain.Entities;
 
-public class CustomerId : Entity<Guid>
+public class CustomerId : AggregateRoot<Guid>
 {
     public CustomerId(Guid id, string name)
     {

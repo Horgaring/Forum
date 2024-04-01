@@ -50,15 +50,16 @@ public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment
             LastUpdate = DateTime.UtcNow,
             
         };
-        await _repository.CreateAsync(comment);
-        await _uow.CommitAsync(cancellationToken);
-        await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
+        comment.RaiseEvent(new CommentCreatedEvent()
         {
             Content = comment.Content,
             CustomerId = request.CustomerInfo.Id,
             Date = comment.CreatedAt,
             PostId = comment.Postid
-        }, cancellationToken);
+        });
+        await _repository.CreateAsync(comment);
+        await _uow.CommitAsync(cancellationToken);
+        
         return comment;
     }
 }

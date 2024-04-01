@@ -2,6 +2,7 @@ using BuildingBlocks.Core.Events;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Infrastructure.Context;
+using Infrastructure.Context.Repository;
 using MassTransit;
 using Serilog;
 

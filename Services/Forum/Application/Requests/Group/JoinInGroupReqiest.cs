@@ -2,6 +2,7 @@ using Application.Exceptions.Common;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Infrastructure.Context;
+using Infrastructure.Context.Repository;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

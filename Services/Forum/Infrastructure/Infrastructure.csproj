@@ -31,8 +31,11 @@
     </ItemGroup>
 
 
+    
+
+
     <ItemGroup>
-        <Protobuf Include="./Protos/Post.proto" GrpcServices="Server" />
+      <Folder Include="Context/Repository/" />
     </ItemGroup>
 
     

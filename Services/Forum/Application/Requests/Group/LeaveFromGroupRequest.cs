@@ -3,6 +3,7 @@ using Application.Exceptions.Group;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Infrastructure.Context;
+using Infrastructure.Context.Repository;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +21,15 @@ public class LeaveFromGroupRequestHandler : IRequestHandler<LeaveFromGroupReques
     
     private readonly GroupRepository _repository;
     
-    private readonly CustomerIdRepository _customerRepository;
+
     
     private readonly IUnitOfWork<PostDbContext> _uow;
 
-    public LeaveFromGroupRequestHandler(GroupRepository repository, IUnitOfWork<PostDbContext> uow, CustomerIdRepository customerRepository)
+    public LeaveFromGroupRequestHandler(GroupRepository repository, IUnitOfWork<PostDbContext> uow)
     {
         (_repository) = (repository);
         _uow = uow;
-        _customerRepository = customerRepository;
+        
     }
 
     public async Task Handle(LeaveFromGroupRequest request, CancellationToken cancellationToken)

@@ -1,10 +1,11 @@
+using BuildingBlocks;
 using BuildingBlocks.Core.Model;
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
-public class Comment : Entity<Guid>
+public class Comment : AggregateRoot<Guid>
 {
     public Comment() { }
     public Comment(string content)

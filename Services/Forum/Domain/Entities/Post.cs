@@ -1,8 +1,9 @@
+using BuildingBlocks;
 using BuildingBlocks.Core.Model;
 
 namespace Domain.Entities;
 
-public class Post : Entity<Guid>
+public class Post : AggregateRoot<Guid>
 {
     public CustomerId User { get; set; }
     

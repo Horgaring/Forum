@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 
 namespace Infrastructure.Configurations;
 
@@ -24,9 +25,12 @@ public static class Configuration
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IDataSeeder, CommentDataSeeder>();
-        services.AddDbContext<CommentDbContext>(op =>
+        services.AddSingleton<ConvertDomainToEventOutBoxInterceptor>();
+        services.AddDbContext<CommentDbContext>((sp,op) => 
+            
             op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")
-                ,b => b.MigrationsAssembly("Api")));
+                ,b => b.MigrationsAssembly("Api"))
+                .AddInterceptors(sp.GetRequiredService<ConvertDomainToEventOutBoxInterceptor>()));
         services.AddScoped<CommentRepository,CommentRepository>();
         services.AddScoped<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
@@ -34,6 +38,14 @@ public static class Configuration
         services.AddHealthChecks()
             .AddCheck<SqlHealthCheck>("SqlIsReady");
         services.AddAuthorization();
+        services.AddScoped<OtboxMesPublishedJob<CommentDbContext>>();
+        services.AddQuartz(config => {
+            config.AddJob<OtboxMesPublishedJob<CommentDbContext>>(OtboxMesPublishedJob<CommentDbContext>.JobKey);
+        });
+        services.AddQuartzHostedService(opt => 
+        {
+            opt.WaitForJobsToComplete = true; 
+        });
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>
             {

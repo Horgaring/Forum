@@ -11,13 +11,13 @@ using MediatR;
 
 namespace Application.Requests.Post;
 
-public class DeletePostRequest : IRequest<bool>
+public class DeletePostRequest : IRequest
 {
     public CustomerId User { get; set; }
     public Guid id { get; set; }
 }
 
-public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
+public class DeletePostHandler : IRequestHandler<DeletePostRequest>
 {
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly PostRepository _repository;
@@ -27,7 +27,7 @@ public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
         (_repository,_uow,_publishEndpoint) = (repository,uow,endp);
 
     
-    public async Task<bool> Handle(DeletePostRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DeletePostRequest request, CancellationToken cancellationToken)
     {
         var post = await _repository.SingleOrDefaultAsync(op => op.Id == request.id);
         
@@ -40,16 +40,12 @@ public class DeletePostHandler : IRequestHandler<DeletePostRequest, bool>
         {
             throw new PermissionDenied(new[]{"User is not have this post"});
         }
-        
-        _repository.Delete(post);
-        if (await _uow.CommitAsync() > 0)
-        {
-            await _publishEndpoint.Publish<DeletedPostEvent>(new DeletedPostEvent()
+        post.RaiseEvent(new DeletedPostEvent()
             {
                 PostId = post.Id
-            }, cancellationToken);
-            return true;
-        }
-        return false;
+            });
+        _repository.Delete(post);
+        await _uow.CommitAsync();
+        
     }
 }

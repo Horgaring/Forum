@@ -1,8 +1,9 @@
+using BuildingBlocks;
 using BuildingBlocks.Core.Model;
 
 namespace Domain.Entities;
 
-public class Group : Entity<Guid>
+public class Group : AggregateRoot<Guid>
 {
     public string Name { get; set; }
     

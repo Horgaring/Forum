@@ -1,6 +1,6 @@
 namespace BuildingBlocks.Core.Events.Post;
 
-public class CreatedPostEvent
+public class CreatedPostEvent : DomainEvent
 {
     public Guid Id { get; set; }
     

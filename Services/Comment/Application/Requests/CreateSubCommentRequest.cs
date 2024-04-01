@@ -57,15 +57,16 @@ public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,S
         if (await _repository.GetByIdAsync(comment.ParentComment) == null) 
             throw new CommentNotFound(new []{"Parent Comment Id is Invalid"});
             
-        await _repository.CreateAsync(comment);
-        await _uow.CommitAsync(cancellationToken);
-        await _endpoint.Publish<CommentCreatedEvent>(new CommentCreatedEvent()
+        comment.RaiseEvent(new CommentCreatedEvent()
         {
             Content = comment.Content,
             CustomerId = request.CustomerInfo.Id,
             Date = comment.CreatedAt,
             PostId = comment.Postid
-        }, cancellationToken);
+        });
+        await _repository.CreateAsync(comment);
+        await _uow.CommitAsync(cancellationToken);
+        
         return comment;
     }
 }
