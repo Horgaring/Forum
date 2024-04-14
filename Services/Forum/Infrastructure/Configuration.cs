@@ -35,7 +35,13 @@ public static class Configuration
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddScoped<OtboxMesPublishedJob<PostDbContext>>();
         services.AddQuartz(config => {
-            config.AddJob<OtboxMesPublishedJob<PostDbContext>>(OtboxMesPublishedJob<PostDbContext>.JobKey);
+            config.AddJob<OtboxMesPublishedJob<PostDbContext>>(OtboxMesPublishedJob<PostDbContext>.JobKey)
+            .AddTrigger(config =>
+            config
+                .ForJob(OtboxMesPublishedJob<PostDbContext>.JobKey)
+                .WithSimpleSchedule(x => 
+                    x.WithIntervalInSeconds(15)
+                        .RepeatForever()));
         });
         services.AddQuartzHostedService(opt => 
         {

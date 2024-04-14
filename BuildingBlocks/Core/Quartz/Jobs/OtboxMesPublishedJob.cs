@@ -1,8 +1,11 @@
 ﻿using System.Text.Json;
+using BuildingBlocks.Core.Model;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quartz;
+using Serilog;
 
 namespace BuildingBlocks;
 
@@ -28,14 +31,20 @@ where TContext : DbContext
 
         foreach (var outBoxMessage in outBoxMessages)
         {
-            var domainevent = JsonSerializer.Deserialize<DomainEvent>(outBoxMessage.Data);
+            
+            var domainevent = JsonConvert.DeserializeObject(outBoxMessage.Data, new JsonSerializerSettings{
+                TypeNameHandling = TypeNameHandling.Auto
+            });
             if (domainevent == null)
             {
                 continue;
             }
             await _publish.Publish(domainevent);
         }
-;
+;       if (outBoxMessages.Count > 0) Log.Information($"Published {outBoxMessages.Count} events to outbox");
+{
+    
+}
         _db.Set<OutBoxMessage>().RemoveRange(outBoxMessages);
     }
 }

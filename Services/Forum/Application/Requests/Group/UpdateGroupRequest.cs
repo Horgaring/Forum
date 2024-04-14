@@ -34,7 +34,7 @@ public class UpdateGroupRequestHandler : IRequestHandler<UpdateGroupRequest>
 
     public async Task Handle(UpdateGroupRequest request, CancellationToken cancellationToken)
     {
-        var group = await _repository.Table.FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken: cancellationToken) ?? throw new GroupNotFoundExeption();
+        var group = await _repository.Table.Include(p => p.Owner).FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken: cancellationToken) ?? throw new GroupNotFoundExeption();
         if (group.Owner != (await _customerRepository.GetByIdAsync(request.CustomerId)
                             ?? throw new CustomerNotFound()))
         {

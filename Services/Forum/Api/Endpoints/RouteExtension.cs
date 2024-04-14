@@ -165,8 +165,8 @@ public static class RouteExtension
             .First(op => op.Type == JwtClaimTypes.Subject).Value),
             context.User.Claims
                 .First(op => op.Type == JwtClaimTypes.Name).Value);
-        var res = await mediator.Send(req);
-        return Results.Json(res);
+        await mediator.Send(req);
+        return Results.Ok();
     }
 
     private static async Task<IResult> UpdatePost(HttpContext context,

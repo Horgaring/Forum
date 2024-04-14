@@ -17,11 +17,13 @@ public class GroupConfigurations: IEntityTypeConfiguration<Group>
         
         builder
             .HasMany(p => p.Posts)
-            .WithOne(p => p.Group);
+            .WithOne(p => p.Group)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder
             .HasOne(p => p.Owner)
-            .WithMany(p => p.OwnGroups);
+            .WithMany(p => p.OwnGroups)
+            .OnDelete(DeleteBehavior.Cascade);
         
         
     }

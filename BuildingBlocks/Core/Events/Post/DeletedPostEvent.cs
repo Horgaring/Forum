@@ -1,6 +1,8 @@
+using BuildingBlocks.Core.Model;
+
 namespace BuildingBlocks.Core.Events.Post;
 
-public class DeletedPostEvent : DomainEvent
+public class DeletedPostEvent : IDomainEvent
 {
     public Guid PostId { get; set; }
 }

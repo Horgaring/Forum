@@ -2,7 +2,6 @@ using System.Data;
 using Application.DTOs;
 using BuildingBlocks;
 using Dapper;
-using GrpcService1;
 using MediatR;
 
 

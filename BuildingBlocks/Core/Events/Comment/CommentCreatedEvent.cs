@@ -1,6 +1,8 @@
+using BuildingBlocks.Core.Model;
+
 namespace BuildingBlocks.Core.Events.Comment;
 
-public class CommentCreatedEvent : DomainEvent
+public class CommentCreatedEvent : IDomainEvent
 {
     public string Content { get; set; }
     public Guid CustomerId { get; set; }

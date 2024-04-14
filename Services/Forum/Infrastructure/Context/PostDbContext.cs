@@ -15,7 +15,7 @@ public class PostDbContext: DbContext
     
     public DbSet<Group> Groups { get; set; }
     
-    public OutBoxMessage OutBoxMessage { get; set; }
+    public DbSet<OutBoxMessage> OutBoxMessage { get; set; }
     
     public DbSet<CustomerId> CustomersId { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

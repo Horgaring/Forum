@@ -1,4 +1,3 @@
-import { Header } from "../components/Header"
 import { Signin,Callback,GetUser } from "../services/Auth"
 
 export const Main = () => {
@@ -16,7 +15,7 @@ export const Main = () => {
     }
 
     return(<>
-    <Header/>
+    
     <button onClick={signin}>sigin</button>
     <button onClick={login}>login</button>
     <button onClick={getuser}>user</button>

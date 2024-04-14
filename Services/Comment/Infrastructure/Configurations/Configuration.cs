@@ -40,7 +40,13 @@ public static class Configuration
         services.AddAuthorization();
         services.AddScoped<OtboxMesPublishedJob<CommentDbContext>>();
         services.AddQuartz(config => {
-            config.AddJob<OtboxMesPublishedJob<CommentDbContext>>(OtboxMesPublishedJob<CommentDbContext>.JobKey);
+            config.AddJob<OtboxMesPublishedJob<CommentDbContext>>(OtboxMesPublishedJob<CommentDbContext>.JobKey)
+            .AddTrigger(config =>
+            config
+                .ForJob(OtboxMesPublishedJob<CommentDbContext>.JobKey)
+                .WithSimpleSchedule(x => 
+                    x.WithIntervalInSeconds(15)
+                        .RepeatForever()));
         });
         services.AddQuartzHostedService(opt => 
         {

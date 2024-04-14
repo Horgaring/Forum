@@ -1,5 +1,8 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace BuildingBlocks;
@@ -28,7 +31,9 @@ public class ConvertDomainToEventOutBoxInterceptor : SaveChangesInterceptor
         .Select(p => new OutBoxMessage(
             DateTime.UtcNow,
             p.GetType().Name,
-            JsonSerializer.Serialize(p)
+            JsonConvert.SerializeObject(p, new JsonSerializerSettings{
+                TypeNameHandling = TypeNameHandling.All
+            })
         ))
         .ToList();
         

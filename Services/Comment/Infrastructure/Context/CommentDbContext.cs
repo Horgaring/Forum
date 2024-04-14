@@ -15,7 +15,7 @@ public class CommentDbContext: DbContext
     public DbSet<Comment> Comment { get; set; }
     public DbSet<SubComment> SubComment { get; set; }
 
-    public OutBoxMessage OutBoxMessage { get; set; }
+    public DbSet<OutBoxMessage> OutBoxMessage { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
