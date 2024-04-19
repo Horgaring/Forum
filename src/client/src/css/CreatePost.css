@@ -1,0 +1,10 @@
+.create{
+    text-decoration: none;
+    color: white;
+    display: flex;
+    gap: 10px;
+    background-color: var(--btn-color);
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 15px;
+}

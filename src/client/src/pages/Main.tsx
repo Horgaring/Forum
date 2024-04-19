@@ -1,4 +1,7 @@
 import { Signin,Callback,GetUser } from "../services/Auth"
+import Header from "../components/Header";
+import Ico from "../assets/reddit_ico.png";
+import '../css/common/global.css';
 
 export const Main = () => {
 
@@ -15,7 +18,7 @@ export const Main = () => {
     }
 
     return(<>
-    
+    <Header></Header>
     <button onClick={signin}>sigin</button>
     <button onClick={login}>login</button>
     <button onClick={getuser}>user</button>
