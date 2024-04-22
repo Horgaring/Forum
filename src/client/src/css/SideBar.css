@@ -1,0 +1,39 @@
+.side-bar{
+    color: var(--text-color);
+    display: block;
+    height: 100%;
+    width: 250px;
+    transition: right 2s;
+    overflow-y: scroll;
+    border-right: 1px var(--border-color) solid;
+    height: calc(100vh - var(--header-height));
+    padding: 10px;
+}
+.community-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    list-style-type: none;
+    
+}
+.avatar{
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+}
+.community-name{
+    font-size: var(--text-size);
+}
+.community-container{
+    color: var(--text-color);
+    display: flex;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px;
+    align-items: center;
+}
+.community-container:hover{
+    background-color: var(--border-color);
+    border-radius: 10px;
+}

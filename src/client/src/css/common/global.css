@@ -2,7 +2,11 @@ body{
     background-color: var(--background-color);
 }
 :root{
+    --text-color: white;
+    --text-size: 15px;
     --border-color: #747474;
     --background-color: #010024;
     --btn-color : #50506d;
+    --header-height: 60px;
+
 }

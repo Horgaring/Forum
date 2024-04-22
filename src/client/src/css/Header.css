@@ -1,5 +1,5 @@
 .Header{
-    height: 60px;
+    height: var(--header-height);
     display: flex;
     
 }

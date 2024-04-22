@@ -12,7 +12,7 @@ export default function CreatePost (props: Props) {
     
       <Link className='create' to={'/create'}>
         <LiaPlusSolid color='white' size={20} />
-        Create Post
+        New
       </Link>
    
   );
