@@ -20,12 +20,11 @@ public class CommentDataSeeder : IDataSeeder
 
     private async Task SeedCommentAsync()
     {
-        if (!await _dbContext.Comment.AnyAsync())
-        {
+        
             await _dbContext.Comment.AddAsync(cInitialData.Comment);
             await _dbContext.SaveChangesAsync();
             
-        }
+        
     }
 
 }

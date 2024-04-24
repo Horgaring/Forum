@@ -40,22 +40,21 @@ public static class ConfigurationExtensions
         service.AddSingleton(x => x.GetRequiredService<IOptions<TModel>>().Value);
     }
     
-    public  static IApplicationBuilder UseSeed<TContext>(this IApplicationBuilder app, IWebHostEnvironment env)
+    public async  static Task<IApplicationBuilder> UseSeed<TContext>(this IApplicationBuilder app, IWebHostEnvironment env)
         where TContext : DbContext
     {
         using var scope = app.ApplicationServices.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TContext>();
         Log.Information("Migrate Start");
         db.Database.Migrate();
-        if (env.IsEnvironment("test"))
+        if (env.IsDevelopment())
         {
             
-            var seeders = scope.ServiceProvider.GetServices<IDataSeeder>();
+            var seeders = scope.ServiceProvider.GetServices<IDataSeeder>().ToList();
             foreach (var seeder in seeders)
             {
-                seeder.SeedAllAsync().GetAwaiter().GetResult();
+                await seeder.SeedAllAsync();
             }
-            
         }
         return app;
     }

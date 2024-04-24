@@ -3,6 +3,7 @@ using Api;
 using Application.Requests;
 using BuildingBlocks.TestBase;
 using Infrastructure.Context;
+using Infrastructure.Seed;
 
 namespace IntegrationTest.Comment;
 
@@ -18,6 +19,9 @@ public class CreateCommentTest:  CommentIntegrationTest
     {
         var command = new CreateCommentRequest("test")
         {
+            CustomerInfo = new Domain.ValueObjects.CustomerInfo(){
+                Id = Guid.NewGuid()
+            },
             Postid = Guid.NewGuid()
         };
         

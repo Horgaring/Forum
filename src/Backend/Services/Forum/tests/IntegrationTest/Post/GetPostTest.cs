@@ -21,8 +21,8 @@ public class GetPostTest:  PostIntegrationTest
             PageSize = 1,
         };
         
-        Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));
+        var res = await Fixture.SendAsync(command);
         
-        Assert.Null(exception);
+        Assert.True(res.Count > 0);
     }
 }

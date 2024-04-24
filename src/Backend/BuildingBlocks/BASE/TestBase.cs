@@ -60,9 +60,10 @@ public class TestFixture<TEntryPoint> : IAsyncLifetime
     {
         configurationBuilder.AddInMemoryCollection(new KeyValuePair<string, string>[]
         {
-            new("MessageBroker:Host", BusTestcontainer.Hostname),
-            new("MessageBroker:UserName", "guest"),
-            new("MessageBroker:Password", "guest"),
+            new("MessageBroker:Host", BusTestcontainer.GetConnectionString()),
+            new("MessageBroker-UserName", "guest"),
+            new("MessageBroker-Password", "guest"),
+            new("ConnectionStrings:DefaultConnection", DbTestcontainer.GetConnectionString()),
         }!);
     }
 
@@ -175,10 +176,7 @@ public class TestWriteFixture<TEntryPoint, TContext> : TestFixture<TEntryPoint>
     where TEntryPoint : class
     where TContext : DbContext
 {
-    public Task ExecuteDbContextAsync(Func<TContext, Task> action)
-    {
-        return ExecuteScopeAsync(sp => action(sp.GetService<TContext>()));
-    }
+    
 
     public Task ExecuteDbContextAsync(Func<TContext, ValueTask> action)
     {
@@ -337,7 +335,7 @@ public class TestFixtureCore<TEntryPoint> : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        await InitPostgresAsync();
+        //await InitPostgresAsync();
     }
 
     public async Task DisposeAsync()
@@ -388,10 +386,6 @@ public abstract class TestBase<TEntryPoint, TContext> : TestFixtureCore<TEntryPo
         base(integrationTestFixture, outputHelper)
     {
         Fixture = integrationTestFixture;
-        Fixture.RegisterServices((ser) =>
-        {
-            ser.AddDbContext<TContext>(op => op.UseNpgsql(Fixture.GetDBConnectionString()));
-        });
     }
 
     public TestFixture<TEntryPoint, TContext> Fixture { get; }

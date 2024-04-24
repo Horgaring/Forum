@@ -47,7 +47,8 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest,Domain.Entiti
         
         var postentity = request.Adapt<Domain.Entities.Post>();
         postentity.User = user;
-        var req = await _grouprepository.Where(p => p.Id == request.GroupId)
+        var req = await _grouprepository.Where(p => p.Id == request.GroupId &&
+            p.Followers.Contains(user))
             .FirstOrDefaultAsync() ?? throw new GroupNotFoundExeption();
         postentity.Group = req;
         postentity.RaiseEvent(postentity.Adapt<CreatedPostEvent>());

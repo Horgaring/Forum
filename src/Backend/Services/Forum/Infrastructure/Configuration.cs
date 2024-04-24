@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog.Core;
 using Infrastructure.Context.Repository;
 using Quartz;
+using Infrastructure.Seed;
 
 namespace Infrastructure;
 

@@ -18,7 +18,8 @@ public class CascadeDeleteTest:  CommentIntegrationTest
     [Fact]
     public async void should_Delete_comment_to_db()
     {
-        var publisher = Fixture.ServiceProvider.GetService<IPublishEndpoint>();
+
+        var publisher = Fixture.ServiceProvider.CreateScope().ServiceProvider.GetService<IPublishEndpoint>();
         
         await publisher?.Publish<DeletedPostEvent>(new DeletedPostEvent()
         {
@@ -26,7 +27,9 @@ public class CascadeDeleteTest:  CommentIntegrationTest
         })!;
         var result = await Fixture.ExecuteDbContextAsync(context => 
             Task.FromResult(context.Comment.All(com => 
-                com.Postid != cInitialData.Comment.Postid)));
+                com.Postid != cInitialData.Comment.Postid) ||
+            context.Comment.Count() == 0));
+       
         
         Assert.True(result);
     }

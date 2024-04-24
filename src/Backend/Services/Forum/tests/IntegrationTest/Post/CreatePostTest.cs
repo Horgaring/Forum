@@ -8,6 +8,9 @@ using Application.Requests.Post;
 using Domain.Entities;
 using Testcontainers.PostgreSql;
 using Xunit.Abstractions;
+using Infrastructure.Seed;
+using Microsoft.Extensions.DependencyInjection;
+using Shop.Migrations;
 
 namespace IntegrationTest.Post;
 
@@ -23,13 +26,15 @@ public class CreatePostTest:  PostIntegrationTest
     {
         var command = new CreatePostRequest()
         {
-            User = new CustomerId(){Id = Guid.NewGuid()},
+            GroupId = InitialData.Group.Id,
+            User = InitialData.CustomerId,
             Description = "Test2",
             Title = "Test2",
         };
-        
+    
+
         Exception? exception = await Record.ExceptionAsync(async () => await Fixture.SendAsync(command));
-        
+
         Assert.Null(exception);
     }
 }
