@@ -1,7 +1,10 @@
 .Header{
     height: var(--header-height);
     display: flex;
-    
+    position: fixed;
+    z-index: 1;
+    background-color: var(--background-color);
+    width: 100%;
 }
 body{
     margin: 0px;

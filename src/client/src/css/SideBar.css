@@ -1,13 +1,13 @@
 .side-bar{
+
     color: var(--text-color);
-    display: block;
+    width: var(--side-bar-width);
     height: 100%;
-    width: 250px;
-    transition: right 2s;
+    position: fixed;
     overflow-y: scroll;
-    border-right: 1px var(--border-color) solid;
-    height: calc(100vh - var(--header-height));
-    padding: 10px;
+    border-right: var(--border-with) var(--border-color) solid;
+    
+    padding: var(--side-bar-padding);
 }
 .community-list{
     display: flex;
