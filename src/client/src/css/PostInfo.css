@@ -1,0 +1,57 @@
+.post-info > img {
+    max-height: 540px;
+    width: 100%;
+    border-radius: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.post-info{
+    margin:  20px 0;
+}
+.post-info > p{
+    display: inline;
+}
+.post-comments{
+    width: 100%;
+}
+.comment-con{
+    width: calc(100%  - 20px);
+    height: 40px;
+}
+.ln-credit{
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--text-credit-color);
+    display: inline;
+}
+.post-info > div{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.back-btn{
+    display: inline;
+    background-color: var(--btn-color);
+    vertical-align: middle;
+    border-radius: 100%;
+    opacity: 0.5;
+    padding: 10px;
+}
+.back-btn:hover{
+    opacity: 0.6;
+}
+.back-btn > svg{
+    vertical-align: middle;
+}
+.comms-con{
+    padding: 10px;
+
+}
+.comm  > img{
+    display: inline;
+    vertical-align: middle;
+}
+
+
+

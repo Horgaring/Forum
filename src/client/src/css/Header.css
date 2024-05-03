@@ -26,6 +26,11 @@ body{
     align-items: center;
     
 }
+@media screen and (max-width: 1200px) {
+    .search-container{
+        width: 60%;
+    }
+}
 .user{
     display: flex;
     gap: 20px;

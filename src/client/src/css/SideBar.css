@@ -2,12 +2,36 @@
 
     color: var(--text-color);
     width: var(--side-bar-width);
-    height: 100%;
-    position: fixed;
+    height: calc(100vh - var(--header-height));
+    position: sticky;
     overflow-y: scroll;
     border-right: var(--border-with) var(--border-color) solid;
-    
+    top: var(--header-height);
     padding: var(--side-bar-padding);
+}
+.menu-btn{
+    display: none;
+}
+@media screen and (max-width: 1200px) {
+    .side-bar{
+        position: absolute;
+        left: calc(-1 * var(--side-bar-width) - 21px);
+        top: 0px;
+        transition: left 0.5s ;
+        background-color: var(--background-color);
+        z-index: 1;
+    }
+    .menu-btn{
+        display: inline;
+        cursor: pointer;
+    }
+    .menu-btn:hover{
+    }
+    .side-bar-visible{
+        display: block;
+        top: 0px;
+        left: 0px;
+    }
 }
 .community-list{
     display: flex;

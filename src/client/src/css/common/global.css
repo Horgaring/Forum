@@ -12,17 +12,14 @@ body{
     --side-bar-width: 250px;
     --side-bar-padding: 10px;
     --content-side-padding:  10px;
+    --text-credit-color: #696969;
 }
 .main-container{
     display: flex;
     position: relative;
-    height: calc(100vh);
+    
     top: var(--header-height);
     justify-content: space-between;
     
     
-}
-.side-bar-wr{
-    width: var(--side-bar-width);
-    height: calc(100vh - var(--header-height));
 }

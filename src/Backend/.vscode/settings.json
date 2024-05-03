@@ -1,0 +1,7 @@
+{
+    "dotnet.server.useOmnisharp": true,
+    "omnisharp.useModernNet": false,
+    "omnisharp.sdkIncludePrereleases": false,
+    "omnisharp.sdkPath": "/usr/share/dotnet/sdk/8.0.104",
+    "omnisharp.sdkVersion": "8.0.104"
+}

@@ -3,20 +3,19 @@
     padding: 20px;
     border-radius: 20px;
     width: 100%;
+    
+}
+.post > #post-ln{
+    text-decoration: none;
+    color: var(--text-color);
 }
 .post:hover{
     background-color: var(--border-color);
 }
-.post>h1{
-    
-}
-.post>h1{
-    
-}
-.post > img{
+.post > a >  img{
     
     max-height: 540px;
     width: 100%;
     border-radius: 20px;
-    display: inline;
+    
 }

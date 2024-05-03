@@ -1,4 +1,4 @@
-.search{
+.input-con{
     display: flex;
     padding: 0 10px;
     border-radius: 20px;
@@ -11,10 +11,10 @@
     align-items: center;
     justify-content: stretch;
 }
-.search:hover{
+.input-con:hover{
     opacity: 0.6;
 }
-.search-input{
+.input{
     color: white;
     outline: none;
     border: none;

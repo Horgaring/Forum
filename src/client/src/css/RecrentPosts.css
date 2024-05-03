@@ -1,7 +1,7 @@
 .recrent{
-    width: 50px;
-    height: 50px;
-    background-color: blue;
-    position: fixed;
-    right: 0px;
+    width: 300px;
+    height: calc(100vh - var(--header-height));
+    border-left: var(--border-with) var(--border-color) solid;
+    position: sticky;
+    top: var(--header-height);
 }

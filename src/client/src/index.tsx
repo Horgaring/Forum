@@ -6,12 +6,17 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Main } from './pages/Main';
+import Post  from './pages/Post';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main/>,
   },
+  {
+    path : "post/:id",
+    element : <Post/>
+  }
 ]);
 
 const root = ReactDOM.createRoot(

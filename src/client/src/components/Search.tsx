@@ -7,9 +7,9 @@ export interface Props {
 
 export default function Search (props: Props) {
   return (
-    <div className='search'>
+    <div className='input-con'>
         <AiOutlineSearch size={25}  />
-      <input className='search-input' type="text" />
+      <input className='input' type="text" placeholder='Search' />
     </div>
   );
 }
