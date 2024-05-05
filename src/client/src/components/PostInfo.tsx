@@ -3,6 +3,7 @@ import * as React from 'react';
 import '../css/PostInfo.css';
 import { Link, useNavigate  } from 'react-router-dom';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import ImageSlider from './ImageSlider';
 
 
 export interface IPostInfoProps {
@@ -38,15 +39,24 @@ export default function PostInfo (props: IPostInfoProps) {
           ></img>
           <div>
             <div>
-              <Link className='ln-credit' to={`/g/${group}`}>{group}</Link>
+              <Link className="ln-credit" to={`/g/${group}`}>
+                {group}
+              </Link>
             </div>
             <div>
-              <Link className='ln-credit' to={`/u/${author}`}>{author}</Link>
+              <Link className="ln-credit" to={`/u/${author}`}>
+                {author}
+              </Link>
             </div>
           </div>
         </div>
         <h1>{"test"}</h1>
-        <img src="https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d" />
+        <ImageSlider
+          ImagePath={[
+            "https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d",
+            "https://fotobase.co/files/img/photo/maikl-ili/maikl-ili-29.webp",
+          ]}
+        ></ImageSlider>
       </div>
       <div className="post-comments ">
         <div className="input-con comment-con">
@@ -58,8 +68,14 @@ export default function PostInfo (props: IPostInfoProps) {
               src="https://styles.redditmedia.com/t5_2qyn1/styles/communityIcon_k33q1uumr2511.jpeg"
               className="avatar"
             ></img>
-            <Link className='ln-credit' to={`/u/${author}`}>{author}</Link>
-            <p>{'RimWorld is a massive open-world sandbox video game developed and published by Ludeon Studios. The game follows the player character as they explore and colonize a vast and hostile alien planet called Rimworld. The gameplay revolves around building, managing, and defending settlements, exploring the planet, and engaging in various activities such as mining, crafting, combat, and diplomacy.RimWorld offers a wide range of customization options, allowing players to create unique characters, build unique structures, and develop unique strategies to survive on Rimworld. The game features a rich and detailed world, with various biomes, terrains, and creatures to explore and interact with'}</p>
+            <Link className="ln-credit" to={`/u/${author}`}>
+              {author}
+            </Link>
+            <p>
+              {
+                "RimWorld is a massive open-world sandbox video game developed and published by Ludeon Studios. The game follows the player character as they explore and colonize a vast and hostile alien planet called Rimworld. The gameplay revolves around building, managing, and defending settlements, exploring the planet, and engaging in various activities such as mining, crafting, combat, and diplomacy.RimWorld offers a wide range of customization options, allowing players to create unique characters, build unique structures, and develop unique strategies to survive on Rimworld. The game features a rich and detailed world, with various biomes, terrains, and creatures to explore and interact with"
+              }
+            </p>
           </div>
         </div>
       </div>

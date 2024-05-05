@@ -12,10 +12,28 @@
 .post:hover{
     background-color: var(--border-color);
 }
-.post > a >  img{
-    
+.post-image{
     max-height: 540px;
     width: 100%;
     border-radius: 20px;
+    z-index: 1;
+    flex: 1 0 100%;
+    scroll-snap-align: start;
     
+}
+.post-button{
+    all: unset;
+    text-align: center;
+    width: 40px;
+    cursor: pointer;
+    position: absolute;
+    height: 100%;
+    z-index: 1;
+    
+}
+.slider{
+    display: flex;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
 }

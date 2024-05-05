@@ -16,17 +16,17 @@ export const Main = () => {
         <ContentSide>
           <PostComponent
             Name="test"
-            ImagePath="https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d"
+            ImagePath={["https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d","https://fotobase.co/files/img/photo/maikl-ili/maikl-ili-29.webp","https://fotobase.co/files/img/photo/maikl-ili/maikl-ili-29.webp"]}
             PostId={v4()}
           ></PostComponent>
           <PostComponent
             Name="test"
-            ImagePath="https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d"
+            ImagePath={["https://fotobase.co/files/img/photo/maikl-ili/maikl-ili-29.webp"]}
             PostId="1"
           ></PostComponent>
           <PostComponent
             Name="test"
-            ImagePath="https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d"
+            ImagePath={["https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d"]}
             PostId="1"
           ></PostComponent>
         </ContentSide>
