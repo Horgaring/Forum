@@ -15,7 +15,7 @@ public class GetPostTest:  PostIntegrationTest
     [Fact]
     public async void should_get_one_post_to_db()
     {
-        var command = new GetPostRequest()
+        var command = new GetPostsRequest()
         {
             PageNum = 1,
             PageSize = 1,

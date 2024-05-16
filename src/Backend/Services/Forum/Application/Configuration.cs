@@ -18,7 +18,7 @@ public static class Configuration
         service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreatePostRequest).Assembly));
         service.AddScoped<IValidator<CreatePostRequest>, CreatePostRequestValidator>();
         service.AddScoped<IValidator<GetGroupsRequest>, GetGroupsRequestValidator>();
-        service.AddScoped<IValidator<GetPostRequest>, GetPostRequestValidator>();
+        service.AddScoped<IValidator<GetPostsRequest>, GetPostRequestValidator>();
         service.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         service.RegisterMapsterConfiguration();
         

@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Validations;
 
-public class GetPostRequestValidator: AbstractValidator<GetPostRequest>
+public class GetPostRequestValidator: AbstractValidator<GetPostsRequest>
 {
     public GetPostRequestValidator()
     {

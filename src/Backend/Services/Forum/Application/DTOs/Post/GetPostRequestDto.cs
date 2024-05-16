@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Application.DTOs.Post;
 
-public class GetPostRequestDto ([FromQuery]int pagesize,[FromQuery]int pagenum)
+public class GetPostsRequestDto ([FromQuery]int pagesize,[FromQuery]int pagenum)
 {
 
     

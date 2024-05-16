@@ -8,6 +8,8 @@ public class PostConfiguration: IEntityTypeConfiguration<Post>
 {
     public void Configure(EntityTypeBuilder<Post> builder)
     {
-        builder.HasOne(p => p.User).WithMany(p => p.Posts);
+        builder.HasOne(p => p.User)
+            .WithMany(p => p.Posts)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

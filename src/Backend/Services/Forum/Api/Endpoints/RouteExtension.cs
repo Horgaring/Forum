@@ -1,3 +1,4 @@
+using Application;
 using Application.DTOs;
 using Application.DTOs.Group;
 using Application.DTOs.Post;
@@ -24,6 +25,12 @@ public static class RouteExtension
 
     private static void UsePostEndpoints(this WebApplication app)
     {
+        app.MapGet("api/posts/groups/{id:guid}", GetPostsByGroupId)
+            .AllowAnonymous()
+            .RequireAuthorization();
+        app.MapGet("api/posts/{id:guid}", GetPostById)
+            .AllowAnonymous()
+            .RequireAuthorization();
         app.MapGet("api/posts", GetPosts)
             .AllowAnonymous();
         app.MapPost("api/posts", CreatePost)
@@ -47,14 +54,14 @@ public static class RouteExtension
         app.MapPut("api/groups", UpdateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
-        app.MapPost("api/groups/leave", LeaveFromGroup)
+        app.MapPost("api/groups/leave/{dto:guid}", LeaveFromGroup)
             .RequireAuthorization();
-        app.MapPost("api/groups/join", JoinInGroup)
+        app.MapPost("api/groups/join/{dto:guid}", JoinInGroup)
             .RequireAuthorization();
     }
 
     private static async Task<IResult> JoinInGroup(HttpContext context,
-    [FromBody] IdGroupRequestDto dto,
+    [FromRoute] Guid dto,
     [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<JoinInGroupReqiest>();
@@ -69,7 +76,7 @@ public static class RouteExtension
     }
 
     private static async Task<IResult> LeaveFromGroup(HttpContext context,
-        [FromBody] IdGroupRequestDto dto,
+        [FromRoute] Guid dto,
         [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<LeaveFromGroupRequest>();
@@ -135,10 +142,28 @@ public static class RouteExtension
     }
     
     private static async Task<IResult> GetPosts(HttpContext context,
-        [AsParameters] GetPostRequestDto dto,
+        [AsParameters] GetPostsRequestDto dto,
         [FromServices] IMediator mediator)
     {
-        var req = dto.Adapt<GetPostRequest>();
+        var req = dto.Adapt<GetPostsRequest>();
+        var res = await mediator.Send(req);
+        return Results.Json(res);
+    }
+
+    private static async Task<IResult> GetPostsByGroupId(HttpContext context,
+        [AsParameters] GetPostsByGroupIdRequestDto request,
+        [FromServices] IMediator mediator)
+    {
+        var req = request.Adapt<GetPostsByGroupIdRequest>();
+        var res = await mediator.Send(req);
+        return Results.Json(res);
+    }
+
+    private static async Task<IResult> GetPostById(HttpContext context,
+        [FromRoute] Guid id,
+        [FromServices] IMediator mediator)
+    {
+        var req = id.Adapt<GetPostRequest>();
         var res = await mediator.Send(req);
         return Results.Json(res);
     }

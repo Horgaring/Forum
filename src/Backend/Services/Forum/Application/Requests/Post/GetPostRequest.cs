@@ -1,46 +1,38 @@
-using System.Data;
-using Application.DTOs;
-using BuildingBlocks;
+﻿using BuildingBlocks;
 using Dapper;
 using MediatR;
 
+namespace Application;
 
-namespace Application.Requests.Post;
-
-public class GetPostRequest : IRequest<List<Domain.Entities.Post>>
+public class GetPostRequest : IRequest<PostResponse>
 {
-    
-    public int PageSize{ get; set; }
-    public int PageNum { get; set; }
+    public Guid Id { get; set; }
 }
-public class GetPostHandler : IRequestHandler<GetPostRequest,List<Domain.Entities.Post>>
+public class GetPostHandler : IRequestHandler<GetPostRequest,PostResponse>
 {
     private readonly ISqlconnectionfactory _connectionfactory;
 
     public GetPostHandler(ISqlconnectionfactory conf)=>
         (_connectionfactory) = (conf);
     
-    public async Task<List<Domain.Entities.Post>> Handle(GetPostRequest request, CancellationToken cancellationToken)
+    public async Task<PostResponse> Handle(GetPostRequest request, CancellationToken cancellationToken)
     {
         using var con = _connectionfactory.Create();
         
         con.Open();
-        var res = await con.QueryAsync<Domain.Entities.Post>(
+        var res = await con.QueryFirstOrDefaultAsync<PostResponse>(
             sql: """
                  SELECT
                      *
                  FROM
-                    "Post"
-                 OFFSET @Offset ROWS
-                 FETCH NEXT @PageSize ROWS ONLY;
+                    "Post" AS p
+                 Where p.Id = @Id;
                  """,new
             {
-                Offset = request.PageNum - 1 * request.PageSize,
-                PageSize = request.PageSize
+                Id = request.Id,
             });
         
-        return (res?.ToList() ?? Enumerable.Empty<Domain.Entities.Post>().ToList());
+        return res;
 
     }
 }
-

@@ -5,25 +5,24 @@ namespace Application.DTOs.Group;
 
 public class GroupDto
 {
-    public GroupDto(int followers, List<Domain.Entities.Post> posts, AcountDto owner, string name, Guid id)
+    public GroupDto(int followers, AcountDto owner, string name, Guid id,byte[] avatar)
     {
         Followers = followers;
-        Posts = posts;
         Owner = owner;
         Name = name;
         Id = id;
+        Avatar = avatar;
     }
     
     public GroupDto()
     {
         
     }
+    
     public Guid Id { get; set; }
     public string Name { get; set; }
     
+    public byte[] Avatar { get; set; }
     public AcountDto Owner { get; set; }
-    
-    public List<Domain.Entities.Post> Posts { get; set; }
-    
     public int Followers { get; set; }
 }
