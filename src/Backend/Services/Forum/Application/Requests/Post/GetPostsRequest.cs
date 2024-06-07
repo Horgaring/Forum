@@ -35,7 +35,7 @@ public class GetPostsHandler : IRequestHandler<GetPostsRequest,List<PostResponse
                  FETCH NEXT @PageSize ROWS ONLY;
                  """,new
             {
-                Offset = request.PageNum - 1 * request.PageSize,
+                Offset = (request.PageNum - 1) * request.PageSize,
                 PageSize = request.PageSize
             });
         

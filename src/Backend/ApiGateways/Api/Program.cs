@@ -17,6 +17,12 @@ try
     builder.Services.AddSerilog(p => 
         p.WriteTo.Console());
     builder.Services.AddSingleton<ExceptionMiddleware>();
+    builder.Services.AddCors(p=> 
+        p.AddPolicy("REACTAPP", builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()));
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.Configure<ForwardedHeadersOptions>(options =>
     {
@@ -42,6 +48,7 @@ try
         });
     }
     app.UseMiddleware<ExceptionMiddleware>();
+    app.UseCors("REACTAPP");
     app.UseForwardedHeaders();
     app.UseSerilogRequestLogging();
     app.MapReverseProxy();

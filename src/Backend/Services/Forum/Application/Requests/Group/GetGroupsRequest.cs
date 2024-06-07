@@ -23,7 +23,7 @@ public class GetGroupsRequestHandler : IRequestHandler<GetGroupsRequest,List<Gro
     public async Task<List<GroupDto>> Handle(GetGroupsRequest request, CancellationToken cancellationToken)
     {
         if ( await _repository.Where(p => p.Name.Contains(request.Name))
-                .Skip(request.Size * request.Page - 1)
+                .Skip(request.Size * (request.Page - 1))
                 .Take(request.Page)
                 .AsNoTracking()
                 .Select(p => new GroupDto(p.Followers.Count,

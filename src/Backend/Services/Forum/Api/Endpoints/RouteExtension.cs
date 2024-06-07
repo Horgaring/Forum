@@ -25,7 +25,7 @@ public static class RouteExtension
 
     private static void UsePostEndpoints(this WebApplication app)
     {
-        app.MapGet("api/posts/groups/{id:guid}", GetPostsByGroupId)
+        app.MapGet("api/posts/groups/{groupid:guid}", GetPostsByGroupId)
             .AllowAnonymous()
             .RequireAuthorization();
         app.MapGet("api/posts/{id:guid}", GetPostById)
@@ -182,7 +182,7 @@ public static class RouteExtension
     }
     
     private static async Task<IResult> DeletePost(HttpContext context,
-        [FromBody] DeletePostRequestDTO dto,
+        [AsParameters] DeletePostRequestDTO dto,
         [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<DeletePostRequest>();
