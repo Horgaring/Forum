@@ -15,7 +15,7 @@ public class UpdateGroupRequest : IRequest
     
     public Guid CustomerId { get; set; }
     
-    public IFormFile Avatar { get; set; }
+    public byte[] Avatar { get; set; }
 }
 
 public class UpdateGroupRequestHandler : IRequestHandler<UpdateGroupRequest>
@@ -42,11 +42,6 @@ public class UpdateGroupRequestHandler : IRequestHandler<UpdateGroupRequest>
         }
         
         group.Name = request.Name;
-        using (MemoryStream fs = new())
-        {
-            request.Avatar.CopyTo(fs);
-            group.AvatarPath = fs.ToArray();
-        }
         
         _repository.Update(group);
         await _uow.CommitAsync();

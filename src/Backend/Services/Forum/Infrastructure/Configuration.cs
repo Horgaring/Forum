@@ -41,7 +41,7 @@ public static class Configuration
             config
                 .ForJob(OtboxMesPublishedJob<PostDbContext>.JobKey)
                 .WithSimpleSchedule(x => 
-                    x.WithIntervalInSeconds(15)
+                    x.WithInterval(TimeSpan.FromMinutes(1))
                         .RepeatForever()));
         });
         services.AddQuartzHostedService(opt => 

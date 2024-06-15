@@ -5,7 +5,7 @@ namespace Application.DTOs.Group;
 
 public class GroupDto
 {
-    public GroupDto(int followers, AcountDto owner, string name, Guid id,byte[] avatar)
+    public GroupDto(int followers, AccountDto owner, string name, Guid id,byte[] avatar)
     {
         Followers = followers;
         Owner = owner;
@@ -23,6 +23,6 @@ public class GroupDto
     public string Name { get; set; }
     
     public byte[] Avatar { get; set; }
-    public AcountDto Owner { get; set; }
+    public AccountDto Owner { get; set; }
     public int Followers { get; set; }
 }

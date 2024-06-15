@@ -1,14 +1,17 @@
-﻿using BuildingBlocks;
+﻿using Application.DTOs.Common;
+using BuildingBlocks;
 using Dapper;
+using Domain.Entities;
 using MediatR;
+using Serilog;
 
 namespace Application;
 
 public class GetPostsByGroupIdRequest : IRequest<List<PostResponse>>
 {
     public Guid GroupId {get; set;}
-    public int PageNum { get; internal set; }
-    public int PageSize { get; internal set; }
+    public int PageNum { get;  set; }
+    public int PageSize { get;  set; }
 }
 
 public class GetPostsByGroupIdHandler : IRequestHandler<GetPostsByGroupIdRequest,List<PostResponse>>
@@ -23,22 +26,28 @@ public class GetPostsByGroupIdHandler : IRequestHandler<GetPostsByGroupIdRequest
         using var con = _connectionfactory.Create();
         
         con.Open();
-        var res = await con.QueryAsync<PostResponse>(
+        var res = await con.QueryAsync<PostResponse, AccountDto, PostResponse>(
             sql: """
                  SELECT
                      *
                  FROM
-                    "Post" AS p
-                 Where p.GroupId = @GroupId
+                    "Post"
+                 INNER JOIN "CustomersId" ON "CustomersId"."Id" = "Post"."UserId"
+                 Where "GroupId" = @GroupId
                  OFFSET @Offset ROWS
                  FETCH NEXT @PageSize ROWS ONLY;
-                 """,new
+                 """,
+            (p, c) => 
+            {
+                p.User = c;
+                return p; 
+            },
+            new
             {
                 GroupId = request.GroupId,
-                Offset = request.PageNum - 1 * request.PageSize,
+                Offset = (request.PageNum - 1) * request.PageSize,
                 PageSize = request.PageSize
             });
-        
         return (res?.ToList() ?? Enumerable.Empty<PostResponse>().ToList());
 
     }

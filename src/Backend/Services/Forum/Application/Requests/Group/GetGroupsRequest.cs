@@ -27,7 +27,7 @@ public class GetGroupsRequestHandler : IRequestHandler<GetGroupsRequest,List<Gro
                 .Take(request.Page)
                 .AsNoTracking()
                 .Select(p => new GroupDto(p.Followers.Count,
-                    new AcountDto(p.Owner.Name,p.Owner.Id),
+                    new AccountDto(p.Owner.Name,p.Owner.Id),
                     p.Name,
                     p.Id,
                     p.AvatarPath)).ToListAsync() is List<GroupDto> groups)

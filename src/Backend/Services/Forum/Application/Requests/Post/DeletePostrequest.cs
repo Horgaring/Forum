@@ -8,6 +8,7 @@ using Grpc.Core;
 using Infrastructure.Context;
 using MassTransit;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Requests.Post;
 
@@ -29,16 +30,19 @@ public class DeletePostHandler : IRequestHandler<DeletePostRequest>
     
     public async Task Handle(DeletePostRequest request, CancellationToken cancellationToken)
     {
-        var post = await _repository.SingleOrDefaultAsync(op => op.Id == request.id);
+        var post = await _repository.Table
+            .Where(p => p.Id == request.id)
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         
         if (post is null)
         {
             throw new PostNotFountException(null);
         }
 
-        if (request.User != post.User)
+        if (request.User.Id != post.User.Id)
         {
-            throw new PermissionDenied(new[]{"User is not have this post"});
+            throw new PermissionDenied(new[]{"User does not have this post"});
         }
         post.RaiseEvent(new DeletedPostEvent()
             {

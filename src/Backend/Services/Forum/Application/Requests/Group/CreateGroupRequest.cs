@@ -16,7 +16,7 @@ public class CreateGroupRequest : IRequest
     public CustomerId User { get; set; }
     public string Name { get; set; }
     
-    public IFormFile Avatar { get; set; }
+    public byte[] Avatar { get; set; }
 }
 
 public class CreateGroupRequestHandler : IRequestHandler<CreateGroupRequest>
@@ -44,13 +44,6 @@ public class CreateGroupRequestHandler : IRequestHandler<CreateGroupRequest>
             throw new CustomerNotFound();
         }
         group.Owner = userid;
-        
-        using (MemoryStream fs = new())
-        {
-            request.Avatar.CopyTo(fs);
-            group.AvatarPath = fs.ToArray();
-            
-        }
         group.Followers = (new List<CustomerId>());
         group.Followers.Add(userid);
         await _repository.CreateAsync(group);

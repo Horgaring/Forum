@@ -49,6 +49,8 @@ public class LeaveFromGroupRequestHandler : IRequestHandler<LeaveFromGroupReques
                     PostId = group.Posts[i].Id
                 });
             }
+
+            _repository.Delete(group);
         }
         
         await _uow.CommitAsync();

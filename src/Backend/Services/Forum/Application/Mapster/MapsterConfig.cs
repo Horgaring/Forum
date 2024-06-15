@@ -1,4 +1,5 @@
 using Application.DTOs.Group;
+using Application.DTOs.Post;
 using Application.Requests;
 using Application.Requests.Post;
 using BuildingBlocks.Core.Events.Post;
@@ -20,7 +21,14 @@ public static class MapsterConfig
             .Map(p => p.CreatedAt, _ => DateTime.UtcNow)
             .Map(p => p.LastUpdate, _ => DateTime.UtcNow);
 
-        TypeAdapterConfig<CreateGroupRequestDto, CreateGroupRequest>.NewConfig()
-            .Map(p => p.Avatar, p => p.Avatar).Ignore();
+        TypeAdapterConfig<CreateGroupRequest, Group>.NewConfig()
+            .Map(p => p.AvatarPath, p => p.Avatar).TwoWays();
+
+        TypeAdapterConfig<UpdateGroupRequest, Group>.NewConfig()
+            .Map(p => p.AvatarPath, p => p.Avatar).TwoWays();
+
+        TypeAdapterConfig<Post, PostResponse>.NewConfig()
+            .Map(p => p.GroupId, p => p.Group.Id).TwoWays()
+            .Map(p => p.User, p => p.User);
     }
 }

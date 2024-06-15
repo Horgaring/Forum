@@ -10,19 +10,21 @@ using Infrastructure.Context.Repository;
 using Mapster;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Application.Requests.Post;
 
-public class CreatePostRequest : IRequest<Domain.Entities.Post>
+public class CreatePostRequest : IRequest<PostResponse>
 {
     public Guid GroupId { get; set; }
     public CustomerId User { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }
+    public byte[]? Content { get; set; }
 }
-public class CreatePostHandler : IRequestHandler<CreatePostRequest,Domain.Entities.Post>
+public class CreatePostHandler : IRequestHandler<CreatePostRequest,PostResponse>
 {
     private readonly PostRepository _repository;
     private readonly GroupRepository _grouprepository;
@@ -41,7 +43,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest,Domain.Entiti
     }
 
 
-    public async Task<Domain.Entities.Post> Handle(CreatePostRequest request, CancellationToken cancellationToken)
+    public async Task<PostResponse> Handle(CreatePostRequest request, CancellationToken cancellationToken)
     {
         var user = await _customerIdRepository.Table.FirstOrDefaultAsync(p => p == request.User);
         
@@ -55,7 +57,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostRequest,Domain.Entiti
         
         await _repository.CreateAsync(postentity);
         await _uow.CommitAsync();
-        
-        return postentity;
+        postentity.User = null;
+        return postentity.Adapt<PostResponse>();
     }
 }

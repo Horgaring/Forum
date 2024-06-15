@@ -15,11 +15,11 @@ public static class RouteExtension
     {
         app.MapPut("api/user", UpdateUser)
             .RequireAuthorization();
-        app.MapGet("api/user", GetUser)
+        app.MapGet("api/users", GetUser)
             .RequireAuthorization();
-        app.MapGet("api/user/{*id:guid}", GetUserById)
+        app.MapGet("api/users/{*id:guid}", GetUserById)
             .RequireAuthorization();
-        app.MapGet("api/user/{id}/activity/{days:int}", GetActivity)
+        app.MapGet("api/users/{id}/activitys/{days:int}", GetActivity)
             .RequireAuthorization();
     }
 

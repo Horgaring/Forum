@@ -1,14 +1,14 @@
 namespace Application.DTOs.Common;
 
-public class AcountDto
+public class AccountDto
 {
-    public AcountDto(string name,Guid id)
+    public AccountDto(string name,Guid id)
     {
         Name = name;
         Id = id;
     }
     
-    public AcountDto()
+    public AccountDto()
     {
         
     }

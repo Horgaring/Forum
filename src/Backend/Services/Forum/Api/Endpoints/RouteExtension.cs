@@ -35,11 +35,13 @@ public static class RouteExtension
             .AllowAnonymous();
         app.MapPost("api/posts", CreatePost)
             .ProducesProblem(400)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .DisableAntiforgery();
         app.MapDelete("api/posts", DeletePost)
             .RequireAuthorization();
         app.MapPut("api/posts", UpdatePost)
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .DisableAntiforgery();
     }
     
     public static void UseGroupEndpoints(this WebApplication app)
@@ -54,17 +56,17 @@ public static class RouteExtension
         app.MapPut("api/groups", UpdateGroup)
             .RequireAuthorization()
             .DisableAntiforgery();
-        app.MapPost("api/groups/leave/{dto:guid}", LeaveFromGroup)
+        app.MapPost("api/groups/leave/{dto}", LeaveFromGroup)
             .RequireAuthorization();
-        app.MapPost("api/groups/join/{dto:guid}", JoinInGroup)
+        app.MapPost("api/groups/join/{dto}", JoinInGroup)
             .RequireAuthorization();
     }
 
     private static async Task<IResult> JoinInGroup(HttpContext context,
-    [FromRoute] Guid dto,
+    [FromRoute] string dto,
     [FromServices] IMediator mediator)
     {
-        var req = dto.Adapt<JoinInGroupReqiest>();
+        var req = new JoinInGroupReqiest(){Name = dto};
         req.User = new CustomerId(Guid.Parse(context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value),
             context.User.Claims
@@ -76,10 +78,10 @@ public static class RouteExtension
     }
 
     private static async Task<IResult> LeaveFromGroup(HttpContext context,
-        [FromRoute] Guid dto,
+        [FromRoute] string dto,
         [FromServices] IMediator mediator)
     {
-        var req = dto.Adapt<LeaveFromGroupRequest>();
+        var req = new LeaveFromGroupRequest(){Name = dto};
         req.CustomerId = Guid.Parse(context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value);
         
@@ -91,12 +93,13 @@ public static class RouteExtension
     [AsParameters] UpdateGroupRequestDto dto,
     [FromServices] IMediator mediator)
     {
-        
-        var req = new UpdateGroupRequest()
+        var req = dto.Adapt<UpdateGroupRequest>();
+        if (dto.Image != null)
         {
-            Name = dto.Name
-        };
-        req.Avatar = dto.Avatar;
+            using var fs = new MemoryStream();
+            dto.Image.CopyTo(fs);
+            req.Avatar = fs.ToArray();
+        }
         req.CustomerId = Guid.Parse(context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value);
         
@@ -108,11 +111,13 @@ public static class RouteExtension
         [AsParameters] CreateGroupRequestDto dto,
         [FromServices] IMediator mediator)
     {
-        var req = new CreateGroupRequest()
+        var req = dto.Adapt<CreateGroupRequest>();
+        if (dto.Image != null)
         {
-            Name = dto.Name
-        };
-        req.Avatar = dto.Avatar;
+            using var fs = new MemoryStream();
+            dto.Image.CopyTo(fs);
+            req.Avatar = fs.ToArray();
+        }
         req.User = new CustomerId(Guid.Parse( context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value),
             context.User.Claims
@@ -163,16 +168,22 @@ public static class RouteExtension
         [FromRoute] Guid id,
         [FromServices] IMediator mediator)
     {
-        var req = id.Adapt<GetPostRequest>();
+        var req = new GetPostRequest(){Id = id};
         var res = await mediator.Send(req);
         return Results.Json(res);
     }
 
     private static async Task<IResult> CreatePost(HttpContext context,
-        [FromBody] CreatePostRequestDTO dto,
+        [AsParameters] CreatePostRequestDTO dto,
         [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<CreatePostRequest>();
+        if (dto.Image != null)
+        {
+            using var fs = new MemoryStream();
+            dto.Image.CopyTo(fs);
+            req.Content = fs.ToArray();
+        }
         req.User = new CustomerId(Guid.Parse(context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value),
             context.User.Claims
@@ -195,10 +206,16 @@ public static class RouteExtension
     }
 
     private static async Task<IResult> UpdatePost(HttpContext context,
-        [FromBody] UpdatePostRequestDto dto,
+        [AsParameters] UpdatePostRequestDto dto,
         [FromServices] IMediator mediator)
     {
         var req = dto.Adapt<UpdatePostRequest>();
+        if (dto.Image != null)
+        {
+            using var fs = new MemoryStream();
+            dto.Image.CopyTo(fs);
+            req.Content = fs.ToArray();
+        }
         req.User = new CustomerId(Guid.Parse(context.User.Claims
             .First(op => op.Type == JwtClaimTypes.Subject).Value), 
             context.User.Claims

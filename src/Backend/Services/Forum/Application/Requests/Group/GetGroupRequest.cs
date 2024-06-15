@@ -20,15 +20,20 @@ public class GetGroupRequestHandler : IRequestHandler<GetGroupRequest,GroupDto>
     
     public async Task<GroupDto> Handle(GetGroupRequest request, CancellationToken cancellationToken)
     {
-        var group = await _repository.GetByIdAsync(request.Id);
+        var group = await _repository.Table
+            .Where(p => p.Id == request.Id)
+            .Include(p => p.Followers)
+            .Include(p => p.Owner)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         if (group == null)
         {
             throw new GroupNotFoundExeption();
         }
         var groupdto = new GroupDto(group.Followers.Count,
-            new AcountDto(group.Owner.Name,group.Owner.Id),
+            new AccountDto(group.Owner.Name,group.Owner.Id),
             group.Name,
-            group.Id,group.AvatarPath);
+            group.Id,
+            group.AvatarPath);
         return groupdto;
     }
 }

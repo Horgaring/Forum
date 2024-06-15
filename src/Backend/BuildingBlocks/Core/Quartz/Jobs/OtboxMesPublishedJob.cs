@@ -41,10 +41,8 @@ where TContext : DbContext
             }
             await _publish.Publish(domainevent);
         }
-;       if (outBoxMessages.Count > 0) Log.Information($"Published {outBoxMessages.Count} events to outbox");
-{
-    
-}
+        if (outBoxMessages.Count > 0) Log.Information($"Published {outBoxMessages.Count} events to outbox");
         _db.Set<OutBoxMessage>().RemoveRange(outBoxMessages);
+        await _db.SaveChangesAsync();
     }
 }

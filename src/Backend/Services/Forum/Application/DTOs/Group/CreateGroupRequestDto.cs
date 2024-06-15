@@ -8,5 +8,5 @@ public class CreateGroupRequestDto
     [FromForm]
     public string Name { get; set; }
     [FromForm]
-    public IFormFile Avatar { get; set; }
+    public IFormFile Image { get; set; }
 }

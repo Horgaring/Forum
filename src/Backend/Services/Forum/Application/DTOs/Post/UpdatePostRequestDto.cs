@@ -1,9 +1,18 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Application.DTOs.Post;
 
 public class UpdatePostRequestDto
 {
-    public Guid Id { get; set; }
-    public Guid GroupId { get; set; }
-    public string Title { get; set; }
-    public string? Description { get; set; }
+    [FromForm]
+    public Guid Id { get; set; } 
+    [FromForm]
+    public Guid GroupId { get; set; } 
+    [FromForm]
+    public IFormFile? Image { get; set; } 
+    [FromForm]
+    public string Title { get; set; } 
+    [FromForm]
+    public string? Description { get; set; } 
 }

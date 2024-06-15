@@ -16,6 +16,8 @@ public class UpdatePostRequest : IRequest
     public CustomerId User { get; set; }
     public string Title { get; set; }
     public string? Description { get; set; }
+
+    public byte[]? Content { get; set; }
 }
 public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
 {
@@ -34,8 +36,7 @@ public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
        {
            throw new PostNotFountException(null);
        }
-
-       post.Update(request.Title,request.Description);
+       post.Update(request.Title,request.Description,request.Content);
        _repository.Update(post);
        await _uow.CommitAsync();
     }

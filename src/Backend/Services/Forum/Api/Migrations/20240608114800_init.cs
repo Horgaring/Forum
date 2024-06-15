@@ -24,6 +24,20 @@ namespace Shop.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OutBoxMessage",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OccurredOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: true),
+                    Data = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutBoxMessage", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -74,6 +88,7 @@ namespace Shop.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<byte[]>(type: "bytea", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     GroupId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -128,6 +143,9 @@ namespace Shop.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CustomerIdGroup");
+
+            migrationBuilder.DropTable(
+                name: "OutBoxMessage");
 
             migrationBuilder.DropTable(
                 name: "Post");
