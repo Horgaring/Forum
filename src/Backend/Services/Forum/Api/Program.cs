@@ -34,6 +34,7 @@ public class Program
             builder.Services.AddSingleton<ExceptionMiddleware>();
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddCors();
             builder.Services.AddSwaggerGen(p =>
             {
                 //p.MapType(typeof(IFormFile), () => new OpenApiSchema() { Type = "file", Format = "binary" });
@@ -76,11 +77,16 @@ public class Program
             }
             app.UseForwardedHeaders();
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseCors(p => p
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
             app.MapEnpoints();
             app.UseSeed<PostDbContext>(app.Environment);
             app.MapHealthChecks("/health");
-            app.UseAuthentication();
-            app.UseAuthorization();
             app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
             app.Run();

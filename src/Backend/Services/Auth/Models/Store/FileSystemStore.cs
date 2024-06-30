@@ -13,7 +13,7 @@ public class FileSystemStore : IImageStore
         _path = Path.GetDirectoryName(_config["ImagesFolder"] ?? throw new ArgumentNullException());
     }
 
-    public void WriteImage(Stream file,string name)
+    public void Upload(Stream file,string name)
     {
         if (!Directory.Exists(_path))
         {
@@ -23,7 +23,7 @@ public class FileSystemStore : IImageStore
         file.CopyTo(stream);
     }
 
-    public Stream ReadImage(string name)
+    public Stream DownLoad(string name)
     {
         return new FileStream(Path.Combine(_path, name + ".jpeg"),FileMode.Open);
     }

@@ -67,7 +67,7 @@ public static class Configuration
                     };
                     
                 }
-
+        
                 op.MapInboundClaims = false;
                 op.Authority = config["AuthServiceIp"];
                 

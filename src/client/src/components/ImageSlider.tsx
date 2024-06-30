@@ -1,21 +1,23 @@
+import { url } from 'inspector';
 import * as React from 'react';
 import { MdNavigateNext,MdNavigateBefore } from "react-icons/md";
 
 export interface IImageSliderProps {
-    ImagePath: string[];
+    Image:  unknown | undefined;
 
 }
 
 export default function ImageSlider (props: IImageSliderProps) {
-    
+    const [reader,setreader] = React.useState(new FileReader())
   return (
     <div>
       <div style={{ position: "relative", marginTop: "0 auto" }}>
         <div className="slider">
-          {props.ImagePath.map((image, index) => (
+          {Array.isArray(props.Image) &&props.Image.map((image, index) => (
+            
             <img className="post-image" key={index} src={image}></img>
           ))}
-          {props.ImagePath.length > 1 && (
+          {Array.isArray(props.Image) && props.Image.length > 1 && (
             <>
               
                 <button

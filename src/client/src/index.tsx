@@ -7,6 +7,9 @@ import {
 } from "react-router-dom";
 import { Main } from './pages/Main';
 import Post  from './pages/Post';
+import GroupPage from './pages/GroupPage';
+import CreatePost from './components/CreatePost';
+import CreatePostPage from './pages/CreatePostPage';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +19,14 @@ const router = createBrowserRouter([
   {
     path : "post/:id",
     element : <Post/>
+  },
+  {
+    path : "/g/:id",
+    element : <GroupPage/>
+  },
+  {
+    path : "/p/create/:id",
+    element : <CreatePostPage/>
   }
 ]);
 

@@ -20,24 +20,24 @@ public static class Configuration
         services.AddDbContext<ApplicationDbContext>(op =>
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
                 , b => b.MigrationsAssembly("Api")));
-        services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
         services.AddBroker(config);
         services.AddAuthorization();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>
             {
+                //op.Configuration = new OpenIdConnectConfiguration(); 
                 if (config["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
                 {
+                    
                     op.RequireHttpsMetadata = false;
-                    op.TokenValidationParameters = new TokenValidationParameters()
+                    op.TokenValidationParameters = new()
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        ValidateIssuer = false
                     };
                 }
-                //op.Configuration = new OpenIdConnectConfiguration(); 
+                op.Audience = "user";
+                op.MapInboundClaims = false;
                 op.Authority = config["AuthServiceIp"];
                 
             });

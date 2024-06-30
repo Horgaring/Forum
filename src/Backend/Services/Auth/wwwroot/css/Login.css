@@ -55,7 +55,11 @@ ul{
   pointer-events: none;
   transition: .5s;
 }
-
+.error-msg{
+  color: red;
+  float: right;
+  font-size: 12px;
+}
 .login-box .user-box input:focus ~ label,
 .login-box .user-box input:valid ~ label {
   top: -20px;
@@ -63,7 +67,6 @@ ul{
   color: #03e9f4;
   font-size: 12px;
 }
-
 .login-box form a {
   position: relative;
   display: inline-block;

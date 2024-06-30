@@ -14,9 +14,9 @@ public class ImageController: Controller
         _image = image;
     }
 
-    [HttpGet("images/{customerId}")]
-    public FileStreamResult GetFile([FromRoute]string customerId)
+    [HttpGet("{customerId}")]
+    public FileStreamResult GetFile([FromRoute]Guid customerId)
     {
-        return File(_image.GetImage(customerId),"image/jpeg");
+        return File(_image.GetImage(customerId.ToString()),"image/jpeg");
     }
 }

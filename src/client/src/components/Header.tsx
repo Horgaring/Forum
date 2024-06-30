@@ -5,13 +5,16 @@ import Search from './Search';
 import { BiSolidUser } from "react-icons/bi";
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
 import { IoNotifications } from "react-icons/io5";
-import  CreatePost  from "./CreatePost";
 import { RiMenuLine } from "react-icons/ri";
+import { Signin } from '../utils/Auth'
+import CreatePost from './CreatePost';
 
 export interface Props {
+  CreatePostButton: null | string
 }
 
 export default function Header (props: Props) {
+  
   return (
     <>
       <header className="Header">
@@ -35,9 +38,9 @@ export default function Header (props: Props) {
           </div>
           <div className="user">
             <BsFillChatLeftDotsFill color="white" size={20} />
-            <CreatePost />
+            {props.CreatePostButton != null && <CreatePost GroupID={props.CreatePostButton as string} />}
             <IoNotifications color="white" size={20} />
-            <BiSolidUser color="white" size={20} />
+            <BiSolidUser style={{ 'cursor': 'pointer'}} color="white" size={20} onClick={ async () => { await Signin()}} />
           </div>
         </nav>
       </header>

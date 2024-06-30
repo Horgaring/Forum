@@ -165,6 +165,8 @@ spec:
             value: Host=postgres.default.svc.cluster.local;Port=5432;Database=Identity;Username=postgres;Password=postgres
           - name: ASPNETCORE_URLS
             value: http://+
+          - name: ImagesFolder
+            value: "images/"
 ---
 apiVersion: v1
 kind: Service

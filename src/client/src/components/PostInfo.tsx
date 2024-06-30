@@ -24,6 +24,7 @@ export default function PostInfo (props: IPostInfoProps) {
         if (!uuidIsValid(postId)) {
             nav('/');
         }
+
       }, [postId])
 
   return (
@@ -52,9 +53,8 @@ export default function PostInfo (props: IPostInfoProps) {
         </div>
         <h1>{"test"}</h1>
         <ImageSlider
-          ImagePath={[
-            "https://preview.redd.it/this-seems-pretty-fair-v0-rjyh77slz9wc1.png?width=640&crop=smart&auto=webp&s=41d9095fa5dc5a6697a2793d6578a75faebfe56d",
-            "https://fotobase.co/files/img/photo/maikl-ili/maikl-ili-29.webp",
+          Image={["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpaperaccess.com%2Ffull%2F4158252.jpg&f=1&nofb=1&ipt=1e99b0a34b7ae556eb57f66e42f8800f3fee1e33ca2f6f57ada9d9b5f49420e2&ipo=images",
+            'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpaperaccess.com%2Ffull%2F4158252.jpg&f=1&nofb=1&ipt=1e99b0a34b7ae556eb57f66e42f8800f3fee1e33ca2f6f57ada9d9b5f49420e2&ipo=images'
           ]}
         ></ImageSlider>
       </div>

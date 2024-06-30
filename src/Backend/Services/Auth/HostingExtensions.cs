@@ -12,6 +12,7 @@ using Identityserver.Models;
 using Identityserver.Models.Store;
 using Identityserver.Services;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Identity;
@@ -52,7 +53,8 @@ internal static class HostingExtensions
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 1; 
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         builder.Services.addCustomMediatR();
         builder.Services.AddTransient<IProfileService, ProfileService>();

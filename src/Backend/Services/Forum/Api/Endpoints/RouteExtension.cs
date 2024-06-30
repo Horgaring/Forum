@@ -26,10 +26,8 @@ public static class RouteExtension
     private static void UsePostEndpoints(this WebApplication app)
     {
         app.MapGet("api/posts/groups/{groupid:guid}", GetPostsByGroupId)
-            .AllowAnonymous()
             .RequireAuthorization();
         app.MapGet("api/posts/{id:guid}", GetPostById)
-            .AllowAnonymous()
             .RequireAuthorization();
         app.MapGet("api/posts", GetPosts)
             .AllowAnonymous();

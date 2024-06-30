@@ -45,7 +45,7 @@ public class Index : PageModel
         _mediator = mediator;
     }
 
-    public async Task<IActionResult> OnGet(string returnUrl)
+    public async Task<IActionResult> OnGet([FromQuery] string returnUrl)
     {
         await BuildModelAsync(returnUrl);
         return Page();
@@ -53,7 +53,6 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        // check if we are in the context of an authorization request
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
         RegisterUserRequest request = new RegisterUserRequest()
         {
@@ -62,8 +61,26 @@ public class Index : PageModel
             Username = Input.Username,
             File = Input.File
         };
+        var email =await _userManager.FindByEmailAsync(Input.Email);
+        var name =await _userManager.FindByNameAsync(Input.Username);
+        if(email != null)
+        {
+            ModelState.AddModelError("Input.Email", "Email already exists");
+        }
+        if(name != null)
+        {
+            ModelState.AddModelError("Input.Username", "Username already exists");
+        }
+        if (!ModelState.IsValid
+            || name != null
+            || email != null)
+        {
+            await BuildModelAsync(Input.ReturnUrl);
+            return Page();
+        }
         await _mediator.Send(request);
-        return RedirectToPage("Login", Input.ReturnUrl);
+        
+        return RedirectToPage("/Account/Login/Index", new { ReturnUrl = Input.ReturnUrl });
     }
 
     private async Task BuildModelAsync(string returnUrl)
@@ -79,16 +96,6 @@ public class Index : PageModel
             var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
             Input.Username = context?.LoginHint;
             return;
-        }
-
-        var schemes = await _schemeProvider.GetAllSchemesAsync();
-
-        
-        var allowLocal = true;
-        var client = context?.Client;
-        if (client != null)
-        {
-            allowLocal = client.EnableLocalLogin;
         }
     }
 }

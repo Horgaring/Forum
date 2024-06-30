@@ -6,6 +6,7 @@ using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Endpoints;
 
@@ -28,6 +29,8 @@ public static class RouteExtension
         [FromServices] ApplicationDbContext dbContext)
     {
         var user = await dbContext.Users.FindAsync(id);
+        if (user is null)
+            return Results.BadRequest("User not found");
         return Results.Ok(UserResponseDTO.FromUser(user));
     }
     private static async Task<IResult> GetActivity(HttpContext context,
@@ -39,20 +42,30 @@ public static class RouteExtension
             .Where(p => p.UserId == id)
             .OrderBy(p => p.Date)
             .TakeLast(days).ToList();
+        if (users is null)
+            return Results.BadRequest("User not found");
         return Results.Ok(users);
     }
     
     private static async Task<IResult> UpdateUser(HttpContext context,
         [FromBody] UpdateUserRequestDTO dto,
-        [FromServices] UserManager<User> userManager)
+        [FromServices] ApplicationDbContext db)
     {
-        await userManager.UpdateAsync(dto.toUser());
+        var sub = context.User.Claims.Where(p => p.Type == "sub").First().Value;
+        var user =  db.Users.Where(p => p.Id == sub).FirstOrDefault();
+        if (user is null)
+            return Results.BadRequest("User not found");
+        user.UserName = dto.Name;
+        db.SaveChanges();
         return Results.Ok();
     }
     private static async Task<IResult> GetUser(HttpContext context,
-        [FromServices] UserManager<User> userManager)
+        [FromServices] ApplicationDbContext db)
     {
-        var user = await userManager.GetUserAsync(context.User);
+        var sub = context.User.Claims.Where(p => p.Type == "sub").First().Value;
+        var user =  db.Users.AsNoTracking().Where(p => p.Id == sub).FirstOrDefault();
+        if (user is null)
+            return Results.BadRequest("User not found");
         return Results.Ok(UserResponseDTO.FromUser(user));
     }
     

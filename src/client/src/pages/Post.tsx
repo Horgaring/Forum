@@ -19,7 +19,8 @@ export default function Post (props: IPostProps) {
     })
   return (
     <>
-      <Header />
+      <Header CreatePostButton={null} />
+
       <div className="main-container">
         <SideBar></SideBar>
         <ContentSide>

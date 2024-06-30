@@ -34,15 +34,14 @@ try
     {
         p.SwaggerDoc("identity", new OpenApiInfo() { Version = "identity", Title = "identity" });
         p.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            In = ParameterLocation.Header,
-            Description = "Please enter token",
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey,
-            BearerFormat = "JWT",
-            Scheme = "bearer"
-        });
-        p.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    Description = "Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                p.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {
                         new OpenApiSecurityScheme
@@ -69,10 +68,8 @@ try
     }
 
     app.UseForwardedHeaders();
-    app.UseHttpsRedirection();
     app.UseMiddleware<ExceptionMiddleware>();
     app.UseAuthentication();
-    app.UseRouting();
     app.UseAuthorization();
     app.MapEnpoints();
     app.UseSeed<ApplicationDbContext>(app.Environment);

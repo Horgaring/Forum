@@ -13,11 +13,25 @@ public class ImageService : IImageService
 
     public void SaveImage(IFormFile file,string name)
     {
-        _store.WriteImage(file.OpenReadStream(),name);
+        using var stream = file.OpenReadStream();
+        _store.Upload(stream,name);
     }
 
     public Stream GetImage(string name)
     {
-        return _store.ReadImage(name);
+        return _store.DownLoad(name);
+    }
+
+    public bool TrySaveImage(IFormFile file, string name)
+    {
+        try
+        {
+            SaveImage(file, name);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

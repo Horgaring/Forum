@@ -2,22 +2,45 @@ import * as React from 'react';
 import '../css/PostComponent.css';
 import { Link } from 'react-router-dom';
 import ImageSlider from './ImageSlider';
+import { PostCard, Post } from '../api/api';
+import { Props } from './Header';
 
-
-export interface IPostComponentProps {
-  Name: string
-  ImagePath: string[]
-  PostId: string
+interface IPostComponentProps {
+  Post: PostCard
 }
 
+
 export default function PostComponent (props: IPostComponentProps) {
-  
+  const maintContent = (props.Post.ContentImg == null ? <p>{props.Post.ConstentDesc}</p> : <ImageSlider Image={props.Post.ContentImg}></ImageSlider>)
   return (
     <div className="post">
-      <Link id="post-ln" to={`/post/${props.PostId}`}>
-        <h1>{props.Name}</h1>
+      <div className="post-info">
+        <div>
+          <img
+            src={'data:image/png;base64,' + props.Post.GroupInfo.Avatar}
+            className="avatar"
+          ></img>
+          <div>
+            <div>
+              <Link
+                className="ln-credit"
+                to={`/g/${props.Post.GroupInfo.Id}`}
+              >
+                {props.Post.GroupInfo.Name}
+              </Link>
+            </div>
+            <div>
+              <Link className="ln-credit" to={`/u/${props.Post.Id}`}>
+                {props.Post.UserName}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Link id="post-ln" to={`/post/${props.Post.Id}`}>
+        <h1>{props.Post.Name}</h1>
       </Link>
-      <ImageSlider ImagePath={props.ImagePath}></ImageSlider>
+      {maintContent}
     </div>
   );
 }
