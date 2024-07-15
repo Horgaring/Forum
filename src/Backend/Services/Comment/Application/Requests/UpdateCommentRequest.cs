@@ -1,8 +1,7 @@
 using System.Net;
 using Application.Exception;
 using BuildingBlocks.Core.Repository;
-using Grpc.Core;
-using Infrastructure.Context;
+using Domain.Entities;
 using MediatR;
 
 namespace Application.Requests;
@@ -19,10 +18,10 @@ public class UpdateCommentRequest: IRequest
 }
 public class UpdateCommentHandler : IRequestHandler<UpdateCommentRequest>
 {
-    private readonly CommentRepository _repository;
-    private readonly IUnitOfWork<CommentDbContext> _uow;
+    private readonly IRepository<Comment, Guid> _repository;
+    private readonly IUnitOfWork _uow;
 
-    public UpdateCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow)
+    public UpdateCommentHandler(IRepository<Comment, Guid> repository, IUnitOfWork uow)
     {
         _repository = repository;
         _uow = uow;

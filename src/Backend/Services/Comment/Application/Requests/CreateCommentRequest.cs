@@ -3,7 +3,6 @@ using BuildingBlocks.Core.Repository;
 using Domain;
 using Domain.Entities;
 using Domain.ValueObjects;
-using Infrastructure.Context;
 using MassTransit;
 using MediatR;
 
@@ -27,11 +26,11 @@ public class CreateCommentRequest: IRequest<Comment>
 }
 public class CreateCommentHandler : IRequestHandler<CreateCommentRequest,Comment>
 {
-    private readonly CommentRepository _repository;
-    private readonly IUnitOfWork<CommentDbContext> _uow;
+    private readonly IRepository<Comment, Guid> _repository;
+    private readonly IUnitOfWork _uow;
     private readonly IPublishEndpoint _endpoint;
 
-    public CreateCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
+    public CreateCommentHandler(IRepository<Comment, Guid> repository, IUnitOfWork uow, IPublishEndpoint endpoint)
     {
         _repository = repository;
         _uow = uow;

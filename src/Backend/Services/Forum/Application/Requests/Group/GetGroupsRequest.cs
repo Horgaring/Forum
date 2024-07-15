@@ -1,7 +1,7 @@
 using Application.DTOs.Common;
 using Application.DTOs.Group;
 using Application.Exceptions.Group;
-using Infrastructure.Context.Repository;
+using BuildingBlocks.Core.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +15,9 @@ public class GetGroupsRequest : IRequest<List<GroupDto>>
 }
 public class GetGroupsRequestHandler : IRequestHandler<GetGroupsRequest,List<GroupDto>>
 {
-    private readonly GroupRepository _repository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _repository;
 
-    public GetGroupsRequestHandler(GroupRepository repository)=>
+    public GetGroupsRequestHandler(IRepository<Domain.Entities.Group, Guid> repository)=>
         (_repository) = (repository);
     
     public async Task<List<GroupDto>> Handle(GetGroupsRequest request, CancellationToken cancellationToken)

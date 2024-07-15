@@ -11,9 +11,9 @@ public class PostDeletedConsumer: IConsumer<DeletedPostEvent>
 {
     private readonly CommentRepository _db;
     
-    private readonly IUnitOfWork<CommentDbContext> _uow;
+    private readonly IUnitOfWork _uow;
 
-    public PostDeletedConsumer(CommentRepository db, IUnitOfWork<CommentDbContext> uow)
+    public PostDeletedConsumer(CommentRepository db, IUnitOfWork uow)
     {
         _db = db;
         _uow = uow;

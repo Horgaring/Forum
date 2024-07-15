@@ -5,7 +5,6 @@ using Application.Requests.Post;
 using Application.Validations;
 using BuildingBlocks.Validation;
 using FluentValidation;
-using Infrastructure;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

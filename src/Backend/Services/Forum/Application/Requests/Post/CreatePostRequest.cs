@@ -4,9 +4,6 @@ using Application.Exceptions.Post;
 using BuildingBlocks.Core.Events.Post;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
-using Grpc.Core;
-using Infrastructure.Context;
-using Infrastructure.Context.Repository;
 using Mapster;
 using MassTransit;
 using MediatR;
@@ -26,14 +23,18 @@ public class CreatePostRequest : IRequest<PostResponse>
 }
 public class CreatePostHandler : IRequestHandler<CreatePostRequest,PostResponse>
 {
-    private readonly PostRepository _repository;
-    private readonly GroupRepository _grouprepository;
-    private readonly CustomerIdRepository _customerIdRepository;
+    private readonly IRepository<Domain.Entities.Post, Guid> _repository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _grouprepository;
+    private readonly IRepository<CustomerId, Guid> _customerIdRepository;
     
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public CreatePostHandler(PostRepository repository,IUnitOfWork<PostDbContext> uow, IPublishEndpoint publishEndpoint, GroupRepository grouprepository, CustomerIdRepository h, CustomerIdRepository customerIdRepository)
+    public CreatePostHandler(IRepository<Domain.Entities.Post, Guid> repository,
+        IUnitOfWork uow, 
+        IRepository<CustomerId, Guid> customerIdRepository,
+        IPublishEndpoint publishEndpoint,
+        IRepository<Domain.Entities.Group, Guid> grouprepository)
     {
         _publishEndpoint = publishEndpoint;
         _grouprepository = grouprepository;

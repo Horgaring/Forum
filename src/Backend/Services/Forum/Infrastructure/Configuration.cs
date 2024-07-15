@@ -14,6 +14,7 @@ using Serilog.Core;
 using Infrastructure.Context.Repository;
 using Quartz;
 using Infrastructure.Seed;
+using Domain.Entities;
 
 namespace Infrastructure;
 
@@ -29,10 +30,10 @@ public static class Configuration
             op.UseNpgsql(config.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api"))
                 .AddInterceptors(sp.GetRequiredService<ConvertDomainToEventOutBoxInterceptor>()));
-        services.AddTransient<PostRepository,PostRepository>();
-        services.AddTransient<GroupRepository,GroupRepository>();
-        services.AddTransient<CustomerIdRepository,CustomerIdRepository>();
-        services.AddScoped<IUnitOfWork<PostDbContext>, UnitOfWork<PostDbContext>>();
+        services.AddTransient<IRepository<Post, Guid>,PostRepository>();
+        services.AddTransient<IRepository<Group, Guid>,GroupRepository>();
+        services.AddTransient<IRepository<CustomerId, Guid>,CustomerIdRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<PostDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddScoped<OtboxMesPublishedJob<PostDbContext>>();
         services.AddQuartz(config => {

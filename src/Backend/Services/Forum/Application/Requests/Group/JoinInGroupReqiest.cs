@@ -2,8 +2,6 @@ using Application.Exceptions.Common;
 using Application.Exceptions.Group;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
-using Infrastructure.Context;
-using Infrastructure.Context.Repository;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +18,11 @@ public class JoinInGroupReqiest : IRequest
 public class JoinInGroupReqiestHandler : IRequestHandler<JoinInGroupReqiest>
 {
     
-    private readonly CustomerIdRepository _customerRepository;
-    private readonly GroupRepository _repository;
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IRepository<CustomerId, Guid> _customerRepository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _repository;
+    private readonly IUnitOfWork _uow;
 
-    public JoinInGroupReqiestHandler( IUnitOfWork<PostDbContext> uow, CustomerIdRepository customerRepository, GroupRepository repository)
+    public JoinInGroupReqiestHandler( IUnitOfWork uow, IRepository<CustomerId, Guid> customerRepository, IRepository<Domain.Entities.Group, Guid> repository)
     {
         _repository = repository;
         _uow = uow;

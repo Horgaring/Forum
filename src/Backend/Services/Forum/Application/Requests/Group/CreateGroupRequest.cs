@@ -1,8 +1,7 @@
 using Application.Exceptions.Common;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
-using Infrastructure.Context;
-using Infrastructure.Context.Repository;
+
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +20,13 @@ public class CreateGroupRequest : IRequest
 
 public class CreateGroupRequestHandler : IRequestHandler<CreateGroupRequest>
 {
-    private readonly GroupRepository _repository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _repository;
     
-    private readonly CustomerIdRepository _custrepository;
+    private readonly IRepository<CustomerId, Guid> _custrepository;
     
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IUnitOfWork _uow;
 
-    public CreateGroupRequestHandler(GroupRepository repository,IUnitOfWork<PostDbContext> uow, CustomerIdRepository custrepository)
+    public CreateGroupRequestHandler(IRepository<Domain.Entities.Group, Guid> repository,IUnitOfWork uow, IRepository<CustomerId, Guid> custrepository)
     {
         _custrepository = custrepository;
         (_repository, _uow) = (repository, uow);

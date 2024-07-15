@@ -40,4 +40,9 @@ public  class Repository<T,TId,TContext> : IRepository<T,TId> where T : Entity<T
     {
         return Db.Set<T>().Where(entity);
     }
+
+    public async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> value)
+    {
+        return await Db.Set<T>().SingleOrDefaultAsync(value);
+    }
 }

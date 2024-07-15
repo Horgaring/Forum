@@ -31,8 +31,8 @@ public static class Configuration
             op.UseNpgsql(configuration.GetConnectionString("DefaultConnection")
                 ,b => b.MigrationsAssembly("Api"))
                 .AddInterceptors(sp.GetRequiredService<ConvertDomainToEventOutBoxInterceptor>()));
-        services.AddScoped<CommentRepository,CommentRepository>();
-        services.AddScoped<IUnitOfWork<CommentDbContext>, UnitOfWork<CommentDbContext>>();
+        services.AddScoped<IRepository<Comment, Guid>,CommentRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddBroker(configuration);
         services.AddHealthChecks()

@@ -5,7 +5,6 @@ using BuildingBlocks.Core.Events.Post;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Grpc.Core;
-using Infrastructure.Context;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +20,10 @@ public class DeletePostRequest : IRequest
 public class DeletePostHandler : IRequestHandler<DeletePostRequest>
 {
     private readonly IPublishEndpoint _publishEndpoint;
-    private readonly PostRepository _repository;
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IRepository<Domain.Entities.Post, Guid> _repository;
+    private readonly IUnitOfWork _uow;
 
-    public DeletePostHandler(PostRepository repository,IUnitOfWork<PostDbContext> uow,IPublishEndpoint endp)=>
+    public DeletePostHandler(IRepository<Domain.Entities.Post, Guid> repository,IUnitOfWork uow,IPublishEndpoint endp)=>
         (_repository,_uow,_publishEndpoint) = (repository,uow,endp);
 
     

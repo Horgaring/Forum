@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Core.Repository;
 
-public class UnitOfWork<TContext> : IDisposable, IUnitOfWork<TContext> where TContext : DbContext
+public class UnitOfWork<TContext> : IDisposable, IUnitOfWork where TContext : DbContext
 {
     public UnitOfWork(TContext context) => Context = context;
 

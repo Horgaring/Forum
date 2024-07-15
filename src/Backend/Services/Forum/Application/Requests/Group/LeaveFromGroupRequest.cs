@@ -2,12 +2,7 @@ using Application.Exceptions.Common;
 using Application.Exceptions.Group;
 using BuildingBlocks.Core.Events.Post;
 using BuildingBlocks.Core.Repository;
-using Domain.Entities;
-using Infrastructure.Context;
-using Infrastructure.Context.Repository;
-using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Requests.Group;
@@ -20,13 +15,13 @@ public class LeaveFromGroupRequest : IRequest
 public class LeaveFromGroupRequestHandler : IRequestHandler<LeaveFromGroupRequest>
 {
     
-    private readonly GroupRepository _repository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _repository;
     
 
     
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IUnitOfWork _uow;
 
-    public LeaveFromGroupRequestHandler(GroupRepository repository, IUnitOfWork<PostDbContext> uow)
+    public LeaveFromGroupRequestHandler(IRepository<Domain.Entities.Group, Guid> repository, IUnitOfWork uow)
     {
         (_repository) = (repository);
         _uow = uow;

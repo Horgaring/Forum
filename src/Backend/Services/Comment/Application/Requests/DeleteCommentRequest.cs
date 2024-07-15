@@ -2,8 +2,8 @@ using System.Net;
 using Application.Exception;
 using BuildingBlocks.Core.Repository;
 using Domain;
+using Domain.Entities;
 using Grpc.Core;
-using Infrastructure.Context;
 using MassTransit;
 using MediatR;
 
@@ -15,10 +15,10 @@ public class DeleteCommentRequest: IRequest
 }
 public class DeleteCommentHandler : IRequestHandler<DeleteCommentRequest>
 {
-    private readonly CommentRepository _repository;
-    private readonly IUnitOfWork<CommentDbContext> _uow;
+    private readonly IRepository<Comment, Guid> _repository;
+    private readonly IUnitOfWork _uow;
 
-    public DeleteCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
+    public DeleteCommentHandler(IRepository<Comment, Guid> repository, IUnitOfWork uow, IPublishEndpoint endpoint)
     {
         _repository = repository;
         _uow = uow;

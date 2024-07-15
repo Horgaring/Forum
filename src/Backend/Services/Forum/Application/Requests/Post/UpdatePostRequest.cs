@@ -3,8 +3,6 @@ using Application.Exceptions.Common;
 using Application.Exceptions.Post;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
-using Grpc.Core;
-using Infrastructure.Context;
 using MediatR;
 
 namespace Application.Requests.Post;
@@ -21,10 +19,10 @@ public class UpdatePostRequest : IRequest
 }
 public class UpdatePostHandler : IRequestHandler<UpdatePostRequest>
 {
-    private readonly PostRepository _repository;
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IRepository<Domain.Entities.Post, Guid> _repository;
+    private readonly IUnitOfWork _uow;
 
-    public UpdatePostHandler(PostRepository repository,IUnitOfWork<PostDbContext> uow)=>
+    public UpdatePostHandler(IRepository<Domain.Entities.Post, Guid> repository,IUnitOfWork uow)=>
         (_repository,_uow) = (repository,uow);
 
 

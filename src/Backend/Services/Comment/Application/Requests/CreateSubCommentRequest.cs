@@ -3,7 +3,6 @@ using BuildingBlocks.Core.Events.Comment;
 using BuildingBlocks.Core.Repository;
 using Domain.Entities;
 using Domain.ValueObjects;
-using Infrastructure.Context;
 using MassTransit;
 using MediatR;
 
@@ -29,11 +28,11 @@ public class CreateSubCommentRequest:  IRequest<SubComment>
 }
 public class CreateSubCommentHandler : IRequestHandler<CreateSubCommentRequest,SubComment>
 {
-    private readonly CommentRepository _repository;
-    private readonly IUnitOfWork<CommentDbContext> _uow;
+    private readonly IRepository<Comment, Guid> _repository;
+    private readonly IUnitOfWork _uow;
     private readonly IPublishEndpoint _endpoint;
 
-    public CreateSubCommentHandler(CommentRepository repository, IUnitOfWork<CommentDbContext> uow, IPublishEndpoint endpoint)
+    public CreateSubCommentHandler(IRepository<Comment, Guid> repository, IUnitOfWork uow, IPublishEndpoint endpoint)
     {
         _repository = repository;
         _uow = uow;

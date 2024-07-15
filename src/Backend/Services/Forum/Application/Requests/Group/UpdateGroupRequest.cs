@@ -1,10 +1,8 @@
 using Application.Exceptions.Common;
 using Application.Exceptions.Group;
 using BuildingBlocks.Core.Repository;
-using Infrastructure.Context;
-using Infrastructure.Context.Repository;
+using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Requests;
@@ -20,13 +18,13 @@ public class UpdateGroupRequest : IRequest
 
 public class UpdateGroupRequestHandler : IRequestHandler<UpdateGroupRequest>
 {
-    private readonly GroupRepository _repository;
+    private readonly IRepository<Domain.Entities.Group, Guid> _repository;
     
-    private readonly CustomerIdRepository _customerRepository;
+    private readonly IRepository<CustomerId, Guid> _customerRepository;
     
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IUnitOfWork _uow;
 
-    public UpdateGroupRequestHandler(GroupRepository repository,IUnitOfWork<PostDbContext> uow, CustomerIdRepository customerRepository)
+    public UpdateGroupRequestHandler(IRepository<Domain.Entities.Group, Guid> repository,IUnitOfWork uow, IRepository<CustomerId, Guid> customerRepository)
     {
         _customerRepository = customerRepository;
         (_repository, _uow) = (repository, uow);

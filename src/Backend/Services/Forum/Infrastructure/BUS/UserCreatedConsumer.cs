@@ -11,9 +11,9 @@ namespace Infrastructure.BUS;
 public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
 {
     private readonly CustomerIdRepository _custrepository;
-    private readonly IUnitOfWork<PostDbContext> _uow;
+    private readonly IUnitOfWork _uow;
 
-    public UserCreatedConsumer(CustomerIdRepository custrepository, IUnitOfWork<PostDbContext> uow)
+    public UserCreatedConsumer(CustomerIdRepository custrepository, IUnitOfWork uow)
     {
         _custrepository = custrepository;
         _uow = uow;

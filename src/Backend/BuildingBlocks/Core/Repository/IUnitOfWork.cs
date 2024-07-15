@@ -1,8 +1,8 @@
 namespace BuildingBlocks.Core.Repository;
 
-public interface IUnitOfWork<TContext>
+public interface IUnitOfWork
 {
-    public TContext Context { get; }
+    
 
     public Task<int> CommitAsync(CancellationToken cancellationToken = default);
 
