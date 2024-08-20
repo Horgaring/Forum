@@ -1,31 +1,40 @@
+version: '3'
+
 services:
   apigetaway:
     container_name: apigetaway
     environment:
-    - ASPNETCORE_ENVIRONMENT=docker
-    - CommentGrpcOption:Connection=comment
-    - PostGrpcOption:Connection=post
+    - ASPNETCORE_ENVIRONMENT=Docker
     - ASPNETCORE_URLS=http://+
-    image: forum/apigeteway:1.0
+    image: proxy021/forum1apigeteway:2.0
     ports:
-    - '80'
+    - '5000:80'
   rabbitmq:
     container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 60s
+      retries: 5
     environment:
     - RABBITMQ_DEFAULT_USER=guest
     - RABBITMQ_DEFAULT_PASS=guest
-    image: rabbitmq:1.0
+    image: rabbitmq:latest
     ports:
     - '5672'
   notification:
     container_name: notification
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
     environment:
-    - ASPNETCORE_ENVIRONMENT=docker
+    - ASPNETCORE_ENVIRONMENT=Docker
     - ASPNETCORE_URLS=http://+
-    - MessageBroker-Host=5672
+    - MessageBroker__Host=amqp://rabbitmq:5672
     - MessageBroker-UserName=guest
     - MessageBroker-Password=guest
-    image: forum/notification:1.0
+    image: proxy021/forum1notification:2.0
     ports:
     - '80'
   postgres:
@@ -34,40 +43,92 @@ services:
       replicas: 1
       restart_policy:
         condition: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
     environment:
     - POSTGRES_PASSWORD=postgres
     - POSTGRES_USER=postgres
-    image: postgres:1.0
+    image: postgres:latest
+    command: ["postgres","-c", "wal_level=logical", "-c", "max_prepared_transactions=10"]
     ports:
-    - '5432'
+    - '5432:5432'
   comment:
     container_name: comment
+    depends_on:
+      - postgres
+      - rabbitmq
+    links:
+      - postgres
+      - rabbitmq
     environment:
-    - MessageBroker-Host=5672
-    - MessageBroker-UserName=guest
-    - MessageBroker-Password=guest
-    - ASPNETCORE_ENVIRONMENT=docker
+    - AuthServiceIp=http://auth:80
+    - ASPNETCORE_ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=Comment;Username=postgres;Password=postgres
+    - MessageBroker__Host=amqp://rabbitmq:5672
+    - MessageBroker__UserName=guest
+    - MessageBroker__Password=guest
+    - ASPNETCORE_ENVIRONMENT=Docker
     - ASPNETCORE_URLS=http://+
-    image: forum/comment:1.0
+    image: proxy021/forum1comment:2.0
     ports:
     - '80'
   post:
     container_name: post
+    depends_on:
+      - postgres
+      - rabbitmq
+    links:
+      - postgres
+      - rabbitmq
     environment:
-    - MessageBroker-Host=5672
-    - ASPNETCORE_ENVIRONMENT=docker
+    - AuthServiceIp=http://auth:80
+    - ASPNETCORE_ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=Post;Username=postgres;Password=postgres
+    - MessageBroker__Host=amqp://rabbitmq:5672
     - MessageBroker-UserName=guest
     - MessageBroker-Password=guest
+    - ASPNETCORE_ENVIRONMENT=Docker
     - ASPNETCORE_URLS=http://+
-    image: forum/post:1.0
+    image: proxy021/forum1post:2.0
     ports:
     - '80'
   identity:
     container_name: identity
+    depends_on:
+      - postgres
+      - rabbitmq
+    links:
+      - postgres
+      - rabbitmq
     environment:
-    - ASPNETCORE_ENVIRONMENT=docker
+    - AuthServiceIp=http://auth:80
+    - ASPNETCORE_ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=Identity;Username=postgres;Password=postgres
+    - MessageBroker__Host=amqp://rabbitmq:5672
+    - MessageBroker-UserName=guest
+    - MessageBroker-Password=guest
+    - ASPNETCORE_ENVIRONMENT=Docker
     - ASPNETCORE_URLS=http://+
-    image: forum/identity:1.0
+    image: proxy021/forum1identity:2.0
     ports:
     - '80'
-version: '3'
+  auth:
+    container_name: auth
+    depends_on:
+      - postgres
+      - rabbitmq
+    links:
+      - postgres
+      - rabbitmq
+    environment:
+    - ImagesFolder=images/
+    - ASPNETCORE_ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=Identity;Username=postgres;Password=postgres
+    - MessageBroker__Host=amqp://rabbitmq:5672
+    - MessageBroker-UserName=guest
+    - MessageBroker-Password=guest
+    - ASPNETCORE_ENVIRONMENT=Docker
+    - ASPNETCORE_URLS=http://+
+    image: proxy021/forum1auth:2.0
+    ports:
+    - '5001:80'

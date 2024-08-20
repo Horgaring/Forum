@@ -15,6 +15,7 @@ using Infrastructure.Context.Repository;
 using Quartz;
 using Infrastructure.Seed;
 using Domain.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure;
 
@@ -57,21 +58,15 @@ public static class Configuration
             .AddJwtBearer("Bearer", op =>
             {
                 //op.Configuration = new OpenIdConnectConfiguration(); 
-                if (config["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
+                if (config["ASPNETCORE_ENVIRONMENT"] == Environments.Development
+                    || config["ASPNETCORE_ENVIRONMENT"] == "Docker")
                 {
-                    
                     op.RequireHttpsMetadata = false;
-                    op.TokenValidationParameters = new()
-                    {
-                        ValidateAudience = false,
-                        ValidateIssuer = false
-                    };
-                    
+                    op.TokenValidationParameters.ValidIssuer = "http://localhost:5001";
                 }
-        
+                op.Audience = "user";
                 op.MapInboundClaims = false;
                 op.Authority = config["AuthServiceIp"];
-                
             });
         return services;
     }

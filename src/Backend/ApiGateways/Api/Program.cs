@@ -17,6 +17,14 @@ try
     builder.Services.AddSerilog(p => 
         p.WriteTo.Console());
     builder.Services.AddSingleton<ExceptionMiddleware>();
+    if (builder.Environment.EnvironmentName == "Docker")
+    {
+        builder.Configuration.AddJsonFile("appsettings.docker.json");
+    }
+    else
+    {
+        builder.Configuration.AddJsonFile("appsettings.k8s.json");
+    }
     builder.Services.AddCors(p=> 
         p.AddPolicy("REACTAPP", builder => builder
             .WithOrigins("http://localhost:3000")
@@ -35,7 +43,8 @@ try
     builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     builder.Services.AddSwaggerGen();
     var app = builder.Build();
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment()
+        || app.Environment.IsEnvironment("Docker"))
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>

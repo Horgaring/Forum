@@ -66,7 +66,8 @@ public class Program
             });
             builder.Services.AddApplication();
             var app = builder.Build();
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment()
+                || app.Environment.IsEnvironment("Docker"))
             {
                 IdentityModelEventSource.ShowPII = true;
                 app.UseSwagger();

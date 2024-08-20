@@ -32,6 +32,7 @@ public static class Configuration
                 ,b => b.MigrationsAssembly("Api"))
                 .AddInterceptors(sp.GetRequiredService<ConvertDomainToEventOutBoxInterceptor>()));
         services.AddScoped<IRepository<Comment, Guid>,CommentRepository>();
+        services.AddScoped<IRepository<Post, Guid>, PostRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork<CommentDbContext>>();
         services.AddSingleton<ISqlconnectionfactory, SqlConnectionFactory>();
         services.AddBroker(configuration);
@@ -55,21 +56,16 @@ public static class Configuration
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", op =>
             {
-                if (configuration["ASPNETCORE_ENVIRONMENT"] == Environments.Development)
+                if (configuration["ASPNETCORE_ENVIRONMENT"] == Environments.Development
+                    || configuration["ASPNETCORE_ENVIRONMENT"] == "Docker")
                 {
                     op.RequireHttpsMetadata = false;
-                    op.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = false,
-                        //ValidateAudience = false
-                        
-                    };
+                    op.TokenValidationParameters.ValidIssuer = "http://localhost:5001";
                 }
-                //http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
-                op.MapInboundClaims = false;
                 op.Audience = "user";
+                op.MapInboundClaims = false;
                 op.Authority = configuration["AuthServiceIp"];
-                
+                //http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
             });
         return services;
     }
